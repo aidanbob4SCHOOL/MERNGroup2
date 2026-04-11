@@ -18,6 +18,15 @@ function App(): JSX.Element {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
       </Routes>
+
+        {/*/!* protected routes, put any pages that require login here*!/*/}
+        {/*<Route path="/floridex" element={*/}
+        {/*    <ProtectedRoute><Floridex /></ProtectedRoute>*/}
+        {/*} />*/}
+        {/*/!* protected routes *!/*/}
+        {/*<Route path="/log-bird" element={*/}
+        {/*    <ProtectedRoute><LogBird /></ProtectedRoute>*/}
+        {/*} />*/}
     </BrowserRouter>
   );
 }
