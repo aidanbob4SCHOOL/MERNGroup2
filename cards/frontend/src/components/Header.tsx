@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import BirdLogo from './BirdLogo';
 import { useAuth } from '../hooks/useAuth';
 import './Header.css';
@@ -10,10 +10,16 @@ interface HeaderProps {
 
 function Header({ rightContent }: HeaderProps): JSX.Element {
     const { isLoggedIn } = useAuth();
+    const navigate = useNavigate();
 
-    // placeholder values — replace with real data from your API later
+    // replace seen with data from api
     const seenCount  = 0;
-    const totalCount = 100;
+    const totalCount = 151;
+
+    function handleLogout(): void {
+        localStorage.removeItem('token');
+        navigate('/login');
+    }
 
     return (
         <header className="site-header">
@@ -26,6 +32,7 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
 
                 {isLoggedIn && (
                     <>
+                        <button className="logout-btn" onClick={handleLogout}>Logout</button>
                         <div className="header-progress-label">
                             <span className="header-seen-count">{seenCount}</span>/{totalCount}
                         </div>

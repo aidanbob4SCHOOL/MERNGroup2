@@ -11,8 +11,11 @@ function Landing(): JSX.Element {
 
   return (
     <div className="page">
-      <Header rightContent={<Link to="/login">Login</Link>} />
-
+        {isLoggedIn ? (
+            <Header/>
+        ) : (
+            <Header rightContent={<Link to="/login">Login</Link>} />
+        )}
       <main className="landing-main">
         <div className="landing-text">
           <h2 className="welcome-title">Welcome!</h2>

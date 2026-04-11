@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import InfoPanel from '../components/InfoPanel';
 import { PanelState, PanelType } from '../types/panel';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import './Login.css';
 import {Link} from "react-router-dom";
 
@@ -28,6 +30,16 @@ function EyeClosed(): JSX.Element {
 }
 
 function Login(): JSX.Element {
+  //auto redirect if logged in
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/floridex');
+    }
+  }, [isLoggedIn, navigate]);
+
   const [isSignup, setIsSignup]         = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [panel, setPanel]               = useState<PanelState>({
