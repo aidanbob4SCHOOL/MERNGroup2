@@ -1,0 +1,128 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.egg-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.egg-stack {
+  display: grid;
+}
+
+.egg-stack > * {
+  grid-column: 1;
+  grid-row: 1;
+  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.25));
+}
+
+.egg-img {
+  width: 270px;
+
+}
+
+.form-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 200px;
+  place-self: center;
+}
+
+.form-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d4a3e;
+  margin-bottom: 2px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 7px 14px;
+  border: 1px solid #b0ccc0;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  color: #2d4a3e;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: system-ui, sans-serif;
+}
+
+.form-input::placeholder { color: #7aab91; }
+.form-input:focus { border-color: #4A826C; background: #fff; }
+
+.password-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrap .form-input {
+  padding-right: 36px;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #7aab91;
+  width: 24px;
+  height: 24px;
+  overflow: visible;
+  line-height: 0;
+}
+
+.submit-btn {
+  margin-top: 4px;
+  width: 100%;
+  padding: 8px;
+  background: #4A826C;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: system-ui, sans-serif;
+}
+
+.submit-btn:hover { background: #3a7a5e; }
+.submit-btn:active { transform: scale(0.98); }
+
+.toggle-link {
+  font-size: 13px;
+  color: #4A826C;
+  cursor: pointer;
+  text-decoration: underline;
+  text-align: center;
+}
+
+.toggle-link:hover { color: #2d6050; }
