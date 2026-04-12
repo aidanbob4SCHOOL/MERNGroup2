@@ -20,7 +20,7 @@ function Landing(): JSX.Element {
         <div className="landing-text">
           <h2 className="welcome-title">Welcome!</h2>
           <p className="landing-description">
-              Floridex is the spot for all of those wildlife lovers to challenge their adventurous side. Whether you are a birder and can spot any bird from just its sound, or a casual nature enjoyer that struggles to discern the difference between a gull and a heron, this app provides avenues for all to complete this challenge. Utilizing our ai BirdBrain you are able to upload any photos you have taken and it will tell you what bird species is in the photo. Or if you are confident in your identifying skills you can cutout the middle man and log the bird yourself. Whatever your story is, Floridex will help you expand your travels and add another chapter to your wildlife experience.
+              Floridex is the spot for all of those wildlife lovers to challenge their adventurous side. Whether you are a birder and can spot any bird from just its sound, or a casual nature enjoyer that struggles to discern the difference between a gull and a heron, this app provides avenues for all to complete this challenge. Utilizing the open source BioCLIP API, our BirdBrain interface allows you to upload any photos you have taken and have it identify what bird species is in the photo. Or if you are confident in your identifying skills you can cutout the middle man and log the bird yourself. Whatever your story is, Floridex will help you expand your travels and add another chapter to your wildlife experience.
             <br/>
               <br/>
               As we say in Florida, "Where there's a bird, there's a bird."
