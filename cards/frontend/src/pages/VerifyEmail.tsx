@@ -23,10 +23,9 @@ function VerifyEmail(): JSX.Element {
 
         async function verify() {
             try {
-              const response = await fetch('/api/verify-email', {
+              const response = await fetch('/api/verify-email?token=${encodeURIComponent(token)}', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token }),
               });
               const data = await response.json();
               if (response.ok) {
