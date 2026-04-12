@@ -89,7 +89,11 @@ function Login(): JSX.Element {
       const response = await fetch('/api/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ login, email, password }),
+        body: JSON.stringify({
+          login: login,      // username field → login
+          email: email,           // email field → email
+          password: password,
+        }),
       });
 
       const data = await response.json();
@@ -121,7 +125,7 @@ function Login(): JSX.Element {
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ login, password }),
+        body: JSON.stringify({ login : login, password : password }),
       });
 
       const data = await response.json();

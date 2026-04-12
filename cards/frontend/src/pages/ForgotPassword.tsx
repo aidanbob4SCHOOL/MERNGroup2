@@ -35,7 +35,7 @@ function ForgotPassword(): JSX.Element {
             const response = await fetch('/api/request-password-reset', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({identifier}),
+                body: JSON.stringify({identifier : identifier}),
             });
 
             const data = await response.json();
