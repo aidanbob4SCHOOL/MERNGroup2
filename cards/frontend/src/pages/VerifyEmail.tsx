@@ -24,13 +24,14 @@ function VerifyEmail(): JSX.Element {
 
         async function verify() {
             try {
-              const response = await fetch('/api/verify-email?token=${encodeURIComponent(token)}', {
+              const response = await fetch(`/api/verify-email?token=${encodeURIComponent(token)}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
               });
               const data = await response.json();
               if (response.ok) {
                 localStorage.setItem('userID', data.id);
+                localStorage.removeItem('pendingVerificationIdentifier');
                 setStatus('success');
                 setTimeout(() => navigate('/floridex'), 3000);
               } else {
@@ -65,7 +66,6 @@ function VerifyEmail(): JSX.Element {
             const data = await response.json();
 
             if (response.ok) {
-                localStorage.removeItem('pendingVerificationIdentifier');
                 setResendState('sent');
             } else {
                 setResendState('error');
