@@ -36,21 +36,6 @@
   padding: 3rem 0;
 }
 
-/* ── Footer ──
-   Defined here so Footer component only needs a <footer id="app-footer"> */
-#app-footer {
-  background: #1e4a3a;
-  text-align: center;
-  padding: 0.9rem 1rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #7abfa8;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border-top: 2px solid #163829;
-  font-family: 'Inter', sans-serif;
-}
-
 /* ── Responsive breakpoints ── */
 @media (max-width: 900px) {
   #grid {
