@@ -26,270 +26,205 @@ interface Sighting {
 type SeenFilter = 'all' | 'seen' | 'unseen';
 type SortMode   = 'index' | 'name' | 'family';
 
-/* ══════════════════════════════════════════════
-   Static bird list — always 151, never fetched
-   ══════════════════════════════════════════════ */
-const BIRDS: Bird[] = [
-  { id: 1,   name: "White Ibis",                  color: "#CC5500", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/American_White_IbisII.jpg/500px-American_White_IbisII.jpg",                                                                                                                                                                                                          order: "Pelecaniformes",     family: "Threskiornithidae (Herons and Spoonbills)", genus: "Eudocimus",      species: "E. albus" },
-  { id: 2,   name: "Great Blue Heron",             color: "#79cbd4", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/GreatBlueHeronInARiver.jpg/250px-GreatBlueHeronInARiver.jpg",                                                                                                                                                                                                       order: "Pelecaniformes",     family: "Ardeidae (Herons and Egrets)",             genus: "Ardea",          species: "A. herodias" },
-  { id: 3,   name: "Anhinga",                      color: "#1a333b", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Anhinga_anhinga_-Costa_Rica-8.jpg/250px-Anhinga_anhinga_-Costa_Rica-8.jpg",                                                                                                                                                                                         order: "Suliformes",         family: "Anhingidae (Anhingas)",                    genus: "Anhinga",        species: "A. anhinga" },
-  { id: 4,   name: "Great Egret",                  color: "#79cbd4", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Great_Egret_%28Ardea_alba%29_in_Breeding_Plumage%2C_Cape_May_County%2C_New_Jersey%2C_USA_%28cropped%29.png/250px-Great_Egret_%28Ardea_alba%29_in_Breeding_Plumage%2C_Cape_May_County%2C_New_Jersey%2C_USA_%28cropped%29.png",                                       order: "Pelecaniformes",     family: "Ardeidae (Herons and Egrets)",             genus: "Ardea",          species: "A. alba" },
-  { id: 5,   name: "Little Blue Heron",            color: "#79cbd4", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Little_Blue_Fly-By.png/250px-Little_Blue_Fly-By.png",                                                                                                                                                                                                               order: "Pelecaniformes",     family: "Ardeidae (Herons and Egrets)",             genus: "Egretta",        species: "E. caerulea" },
-  { id: 6,   name: "Red-shouldered Hawk",          color: "#fc4c00", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Red-shouldered_Hawk_%28Buteo_lineatus%29_-_Blue_Cypress_Lake%2C_Florida.jpg/250px-Red-shouldered_Hawk_%28Buteo_lineatus%29_-_Blue_Cypress_Lake%2C_Florida.jpg",                                                                                                    order: "Accipitriformes",   family: "Accipitridae",                             genus: "Buteo",          species: "B. lineatus" },
-  { id: 7,   name: "Osprey",                       color: "#e8e8e8", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Osprey_on_nest.jpg/250px-Osprey_on_nest.jpg",                                                                                                                                                                                                                       order: "Accipitriformes",   family: "Pandionidae (Ospreys)",                    genus: "Pandion",        species: "P. haliaetus" },
-  { id: 8,   name: "Boat-tailed Grackle",          color: "#000000", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Boat_Tailed_Grackle_Male_JG.jpg/250px-Boat_Tailed_Grackle_Male_JG.jpg",                                                                                                                                                                                            order: "Passeriformes",     family: "Icteridae (New World blackbirds)",         genus: "Quiscalus",      species: "Q. major" },
-  { id: 9,   name: "Tricolored Heron",             color: "#79cbd4", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Tri-colored_heron_sunrise_bunche_beach_%2833516451355%29_%28cropped%29.jpg/250px-Tri-colored_heron_sunrise_bunche_beach_%2833516451355%29_%28cropped%29.jpg",                                                                                                       order: "Pelecaniformes",     family: "Ardeidae (Herons and Egrets)",             genus: "Egretta",        species: "E. tricolor" },
-  { id: 10,  name: "Northern Mockingbird",         color: "#ed39d2", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Mockingbird_in_Bay_Ridge_%2885082%29.jpg/250px-Mockingbird_in_Bay_Ridge_%2885082%29.jpg",                                                                                                                                                                           order: "Passeriformes",     family: "Mimidae (Mimids)",                         genus: "Mimus",          species: "M. polyglottos" },
-  { id: 11,  name: "Laughing Gull",                color: "#78b7ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Leucophaeus_atricilla_Caye_Caulker_04.JPG/250px-Leucophaeus_atricilla_Caye_Caulker_04.JPG",                                                                                                                                                                        order: "Charadriiformes",   family: "Laridae (Seabirds)",                       genus: "Leucophaeus",    species: "L. atricilla" },
-  { id: 12,  name: "Common Gallinule",             color: "#69ffb6", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Common-gallinule-galapagos-casey-klebba.jpg/250px-Common-gallinule-galapagos-casey-klebba.jpg",                                                                                                                                                                     order: "Gruiformes",        family: "Rallidae (Rails)",                         genus: "Gallinula",      species: "G. galeata" },
-  { id: 13,  name: "Brown Pelican",                color: "#9097d6", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Brown_pelican_in_flight_%28Bodega_Bay%29.jpg/250px-Brown_pelican_in_flight_%28Bodega_Bay%29.jpg",                                                                                                                                                                    order: "Pelecaniformes",     family: "Pelecanidae (Pelicans)",                   genus: "Pelecanus",      species: "P. occidentalis" },
-  { id: 14,  name: "Muscovy Duck",                 color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Muscovy_Duck_%28Cairina_moschata%29_male_%2829039391935%29.jpg/250px-Muscovy_Duck_%28Cairina_moschata%29_male_%2829039391935%29.jpg",                                                                                                                               order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Cairina",        species: "C. moschata" },
-  { id: 15,  name: "Palm Warbler",                 color: "#78633d", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Palm_warbler_%2841597%29.jpg/250px-Palm_warbler_%2841597%29.jpg",                                                                                                                                                                                                   order: "Passeriformes",     family: "Parulidae (Wood-warblers)",                genus: "Setophaga",      species: "S. palmarum" },
-  { id: 16,  name: "Snowy Egret",                  color: "#79cbd4", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Snowy_Egret_%28Egretta_thula%29_Edwin_B_Forsythe_NWR%2C_Galloway%2C_NJ%2C_USA.jpg/250px-Snowy_Egret_%28Egretta_thula%29_Edwin_B_Forsythe_NWR%2C_Galloway%2C_NJ%2C_USA.jpg",                                                                                      order: "Pelecaniformes",     family: "Ardeidae (Herons and Egrets)",             genus: "Egretta",        species: "E. thula" },
-  { id: 17,  name: "Northern Cardinal",            color: "#bf0016", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Male_northern_cardinal_in_Central_Park_%2852612%29.jpg/250px-Male_northern_cardinal_in_Central_Park_%2852612%29.jpg",                                                                                                                                               order: "Passeriformes",     family: "Cardinalidae (New World Passerine)",       genus: "Cardinalis",     species: "C. cardinalis" },
-  { id: 18,  name: "Double-crested Cormorant",     color: "#ffb300", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Phalacrocorax-auritus-007.jpg/250px-Phalacrocorax-auritus-007.jpg",                                                                                                                                                                                                order: "Suliformes",         family: "Phalacrocoracidae (Cormorants)",           genus: "Nannopterum",    species: "N. auritum" },
-  { id: 19,  name: "Sandhill Crane",               color: "#b8ae98", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Sandhill_Crane_JG.jpg/250px-Sandhill_Crane_JG.jpg",                                                                                                                                                                                                                order: "Gruiformes",        family: "Gruidae (Cranes)",                         genus: "Antigone",       species: "A. canadensis" },
-  { id: 20,  name: "Red-bellied Woodpecker",       color: "#7d0202", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Red-bellied_Woodpecker-27527.jpg/250px-Red-bellied_Woodpecker-27527.jpg",                                                                                                                                                                                           order: "Piciformes",        family: "Picidae (Woodpeckers)",                    genus: "Melanerpes",     species: "M. carolinus" },
-  { id: 21,  name: "Wood Stork",                   color: "#17ffaa", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/WoodStorkWhole.JPG/250px-WoodStorkWhole.JPG",                                                                                                                                                                                                                      order: "Ciconiiformes",     family: "Ciconiidae (Storks)",                      genus: "Mycteria",       species: "M. americana" },
-  { id: 22,  name: "Green Heron",                  color: "#79cbd4", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Green_heron_%28Butorides_virescens%29%2C_South_Padre_Island%2C_Texas%2C_USA_%28cropped%29.jpg/250px-Green_heron_%28Butorides_virescens%29%2C_South_Padre_Island%2C_Texas%2C_USA_%28cropped%29.jpg",                                                                order: "Pelecaniformes",     family: "Ardeidae (Herons and Egrets)",             genus: "Butorides",      species: "B. virescens" },
-  { id: 23,  name: "Mourning Dove",                color: "#a20fdb", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Av_Mourning_Dove_JG.jpg/250px-Av_Mourning_Dove_JG.jpg",                                                                                                                                                                                                            order: "Columbiformes",     family: "Columbidae (Doves & Pigeons)",             genus: "Zenaida",        species: "Z. macroura" },
-  { id: 24,  name: "Limpkin",                      color: "#573e61", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Limpkin%2C_Florida_05.jpg/250px-Limpkin%2C_Florida_05.jpg",                                                                                                                                                                                                        order: "Gruiformes",        family: "Aramidae (Limpkin)",                       genus: "Aramus",         species: "A. guarauna" },
-  { id: 25,  name: "Turkey Vulture",               color: "#355247", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Turkey_vulture_%28Cathartes_aura%29_Orange_Walk.jpg/250px-Turkey_vulture_%28Cathartes_aura%29_Orange_Walk.jpg",                                                                                                                                                     order: "Accipitriformes",   family: "Cathartidae (New World Vultures)",         genus: "Cathartes",      species: "C. aura" },
-  { id: 26,  name: "Roseate Spoonbill",            color: "#CC5500", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Roseate_Spoonbill_Platalea_ajaja_JG.jpg/250px-Roseate_Spoonbill_Platalea_ajaja_JG.jpg",                                                                                                                                                                            order: "Pelecaniformes",     family: "Threskiornithidae (Herons and Spoonbills)", genus: "Platalea",       species: "P. ajaja" },
-  { id: 27,  name: "Black Vulture",                color: "#355247", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Black_vulture_%28Coragyps_atratus_brasiliensis%29_Peten.jpg/250px-Black_vulture_%28Coragyps_atratus_brasiliensis%29_Peten.jpg",                                                                                                                                     order: "Accipitriformes",   family: "Cathartidae (New World Vultures)",         genus: "Coragyps",       species: "C. atratus" },
-  { id: 28,  name: "Sanderling",                   color: "#c7b783", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Sanderling_%28Calidris_alba%29_breeding_plumage.jpg/250px-Sanderling_%28Calidris_alba%29_breeding_plumage.jpg",                                                                                                                                                    order: "Charadriiformes",   family: "Scolopacidae (Sandpipers)",                genus: "Calidris",       species: "C. alba" },
-  { id: 29,  name: "Willet",                       color: "#c7b783", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Catoptrophorus_semipalmatus_edit.jpg/250px-Catoptrophorus_semipalmatus_edit.jpg",                                                                                                                                                                                   order: "Charadriiformes",   family: "Scolopacidae (Sandpipers)",                genus: "Tringa",         species: "T. semipalmata" },
-  { id: 30,  name: "Yellow-crowned Night Heron",   color: "#79cbd4", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Yellow-crowned_Night_Heron_%28Nyctanassa_violacea%29_perched_on_a_cedar_-_Cape_May_County%2C_New_Jersey%2C_USA.png/250px-Yellow-crowned_Night_Heron_%28Nyctanassa_violacea%29_perched_on_a_cedar_-_Cape_May_County%2C_New_Jersey%2C_USA.png",                      order: "Pelecaniformes",     family: "Ardeidae (Herons and Egrets)",             genus: "Nyctanassa",     species: "N. violacea" },
-  { id: 31,  name: "Royal Tern",                   color: "#78b7ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Royal_Tern_-_Thalasseus_maximus_%2833285813120%29.jpg/250px-Royal_Tern_-_Thalasseus_maximus_%2833285813120%29.jpg",                                                                                                                                                 order: "Charadriiformes",   family: "Laridae (Seabirds)",                       genus: "Thalasseus",     species: "T. maximus" },
-  { id: 32,  name: "Bald Eagle",                   color: "#fc4c00", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Bald_eagle_about_to_fly_in_Alaska_%282016%29.jpg/250px-Bald_eagle_about_to_fly_in_Alaska_%282016%29.jpg",                                                                                                                                                          order: "Accipitriformes",   family: "Accipitridae",                             genus: "Haliaeetus",     species: "H. leucocephalus" },
-  { id: 33,  name: "Blue Jay",                     color: "#808080", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Blue_jay_in_PP_%2830960%29.jpg/250px-Blue_jay_in_PP_%2830960%29.jpg",                                                                                                                                                                                               order: "Passeriformes",     family: "Corvidae (Corvids)",                       genus: "Cyanocitta",     species: "C. cristata" },
-  { id: 34,  name: "Ruddy Turnstone",              color: "#c7b783", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Ruddy_turnstone_%28Arenaria_interpres%29_Breeding_Plumage_Heislerville_WMA%2C_Cumberland_County%2C_New_Jersey%2C_USA.jpg/250px-Ruddy_turnstone_%28Arenaria_interpres%29_Breeding_Plumage_Heislerville_WMA%2C_Cumberland_County%2C_New_Jersey%2C_USA.jpg",         order: "Charadriiformes",   family: "Scolopacidae (Sandpipers)",                genus: "Arenaria",       species: "A. interpres" },
-  { id: 35,  name: "Red-winged Blackbird",         color: "#000000", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Red-Winged_Blackbird.png/250px-Red-Winged_Blackbird.png",                                                                                                                                                                                                          order: "Passeriformes",     family: "Icteridae (New World blackbirds)",         genus: "Agelaius",       species: "A. phoeniceus" },
-  { id: 36,  name: "Yellow-rumped Warbler",        color: "#78633d", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Yellow-rumped_warbler_singing_%2841612%29_%28cropped%29.jpg/250px-Yellow-rumped_warbler_singing_%2841612%29_%28cropped%29.jpg",                                                                                                                                    order: "Passeriformes",     family: "Parulidae (Wood-warblers)",                genus: "Setophaga",      species: "S. coronata" },
-  { id: 37,  name: "Black-bellied Whistling-Duck", color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Whistling_duck_flight02_-_natures_pics-edit1.jpg/250px-Whistling_duck_flight02_-_natures_pics-edit1.jpg",                                                                                                                                                          order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Dendrocygna",    species: "D. autumnalis" },
-  { id: 38,  name: "Western Cattle-Egret",         color: "#79cbd4", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Kuhreiher_am_Strand_in_%C3%84gypten_9528BE.jpg/250px-Kuhreiher_am_Strand_in_%C3%84gypten_9528BE.jpg",                                                                                                                                                             order: "Pelecaniformes",     family: "Ardeidae (Herons and Egrets)",             genus: "Ardea",          species: "A. ibis" },
-  { id: 39,  name: "Eastern Phoebe",               color: "#f8ff26", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Sayornis_phoebe_-Owen_Conservation_Park%2C_Madison%2C_Wisconsin%2C_USA-8.jpg/250px-Sayornis_phoebe_-Owen_Conservation_Park%2C_Madison%2C_Wisconsin%2C_USA-8.jpg",                                                                                                 order: "Passeriformes",     family: "Tyrannidae (Tyrant Flycatchers)",          genus: "Sayornis",       species: "S. phoebe" },
-  { id: 40,  name: "Pileated Woodpecker",          color: "#7d0202", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/PileatedWoodpeckerFeedingonTree%2C_crop.jpg/250px-PileatedWoodpeckerFeedingonTree%2C_crop.jpg",                                                                                                                                                                    order: "Piciformes",        family: "Picidae (Woodpeckers)",                    genus: "Dryocopus",      species: "D. pileatus" },
-  { id: 41,  name: "Ring-billed Gull",             color: "#78b7ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Larus-delawarensis-021.jpg/250px-Larus-delawarensis-021.jpg",                                                                                                                                                                                                      order: "Charadriiformes",   family: "Laridae (Seabirds)",                       genus: "Larus",          species: "L. delawarensis" },
-  { id: 42,  name: "Mallard",                      color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Anas_platyrhynchos_male_female_quadrat.jpg/500px-Anas_platyrhynchos_male_female_quadrat.jpg",                                                                                                                                                                       order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Anas",           species: "A. platyrhynchos" },
-  { id: 43,  name: "Purple Gallinule",             color: "#69ffb6", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Gallinule_Purple_JG.jpg/500px-Gallinule_Purple_JG.jpg",                                                                                                                                                                                                            order: "Gruiformes",        family: "Rallidae (Rails)",                         genus: "Porphyrio",      species: "P. martinica" },
-  { id: 44,  name: "Loggerhead Shrike",            color: "#8548c7", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Shrike_Loggerhead_JG.jpg/500px-Shrike_Loggerhead_JG.jpg",                                                                                                                                                                                                          order: "Passeriformes",     family: "Laniidae (Shrikes)",                       genus: "Lanius",         species: "L. ludovicianus" },
-  { id: 45,  name: "Black-crowned Night Heron",    color: "#79cbd4", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Nycticorax_nycticorax_457953189.jpg/500px-Nycticorax_nycticorax_457953189.jpg",                                                                                                                                                                                    order: "Pelecaniformes",     family: "Ardeidae (Herons and Egrets)",             genus: "Nycticorax",     species: "N. nycticorax" },
-  { id: 46,  name: "Blue-gray Gnatcatcher",        color: "#83d698", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Blue-gray_gnatcatcher_in_PP_%2872317%29.jpg/500px-Blue-gray_gnatcatcher_in_PP_%2872317%29.jpg",                                                                                                                                                                    order: "Passeriformes",     family: "Polioptilidae (Gnatcatchers)",             genus: "Polioptila",     species: "P. caerulea" },
-  { id: 47,  name: "Gray Catbird",                 color: "#ed39d2", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Gray_catbird_%2885315%29.jpg/500px-Gray_catbird_%2885315%29.jpg",                                                                                                                                                                                                   order: "Passeriformes",     family: "Mimidae (Mimids)",                         genus: "Dumetella",      species: "D. carolinensis" },
-  { id: 48,  name: "Glossy Ibis",                  color: "#CC5500", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Glossy_ibis.png/500px-Glossy_ibis.png",                                                                                                                                                                                                                            order: "Pelecaniformes",     family: "Threskiornithidae (Herons and Spoonbills)", genus: "Plegadis",       species: "P. falcinellus" },
-  { id: 49,  name: "Pied-billed Grebe",            color: "#d6d283", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Pied-billed_Grebe_0561.jpg/500px-Pied-billed_Grebe_0561.jpg",                                                                                                                                                                                                     order: "Podicipediformes",  family: "Podicipedidae (Grebes)",                   genus: "Podilymbus",     species: "P. podiceps" },
-  { id: 50,  name: "Barred Owl",                   color: "#7d6222", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Strix-varia-005.jpg/500px-Strix-varia-005.jpg",                                                                                                                                                                                                                    order: "Strigiformes",      family: "Strigidae (Owls)",                         genus: "Strix",          species: "S. varia" },
-  { id: 51,  name: "Downy Woodpecker",             color: "#7d0202", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Downy_Woodpecker01.jpg/500px-Downy_Woodpecker01.jpg",                                                                                                                                                                                                              order: "Piciformes",        family: "Picidae (Woodpeckers)",                    genus: "Dryobates",      species: "D. pubescens" },
-  { id: 52,  name: "Rock Dove",                    color: "#a20fdb", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Columba_livia_%28Rock_Dove%2C_wild%29%2C_Duncansby_Head%2C_Caithness%2C_Scotland_1.jpg/500px-Columba_livia_%28Rock_Dove%2C_wild%29%2C_Duncansby_Head%2C_Caithness%2C_Scotland_1.jpg",                                                                             order: "Columbiformes",     family: "Columbidae (Doves & Pigeons)",             genus: "Columba",        species: "C. livia" },
-  { id: 53,  name: "American Coot",                color: "#69ffb6", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/American_coot_in_Prospect_Park_%2806152%29.jpg/500px-American_coot_in_Prospect_Park_%2806152%29.jpg",                                                                                                                                                               order: "Gruiformes",        family: "Rallidae (Rails)",                         genus: "Fulica",         species: "F. americana" },
-  { id: 54,  name: "Eastern Bluebird",             color: "#053142", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Sialia_sialis_-Michigan%2C_USA_-pair-8c.jpg/500px-Sialia_sialis_-Michigan%2C_USA_-pair-8c.jpg",                                                                                                                                                                    order: "Passeriformes",     family: "Turdidae (Thrushes)",                      genus: "Sialia",         species: "S. sialis" },
-  { id: 55,  name: "Blue-winged Teal",             color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Blue-Winged_Teal.jpg/500px-Blue-Winged_Teal.jpg",                                                                                                                                                                                                                  order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Spatula",        species: "S. discors" },
-  { id: 56,  name: "Eurasian Collared-Dove",       color: "#a20fdb", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/2022-04-06_Streptopelia_decaocto%2C_Plovdiv%2C_Bulgaria_1.jpg/500px-2022-04-06_Streptopelia_decaocto%2C_Plovdiv%2C_Bulgaria_1.jpg",                                                                                                                               order: "Columbiformes",     family: "Columbidae (Doves & Pigeons)",             genus: "Streptopelia",   species: "S. decaocto" },
-  { id: 57,  name: "Egyptian Goose",               color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Egyptian_goose_%2805659%29.jpg/500px-Egyptian_goose_%2805659%29.jpg",                                                                                                                                                                                              order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Alopochen",      species: "A. aegyptiaca" },
-  { id: 58,  name: "Carolina Wren",                color: "#d8a4eb", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Carolina_Wren1.jpg/500px-Carolina_Wren1.jpg",                                                                                                                                                                                                                      order: "Passeriformes",     family: "Troglodytidae (Wrens)",                    genus: "Thryothorus",    species: "T. ludovicianus" },
-  { id: 59,  name: "House Sparrow",                color: "#a4eba7", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/House_Sparrow%2C_England_-_May_09.jpg/500px-House_Sparrow%2C_England_-_May_09.jpg",                                                                                                                                                                                order: "Passeriformes",     family: "Passeridae (Old World Sparrows)",          genus: "Passer",         species: "P. domesticus" },
-  { id: 60,  name: "Swallow-tailed Kite",          color: "#fc4c00", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Swallow-tailed_Kite_%2834163638494%29.jpg/500px-Swallow-tailed_Kite_%2834163638494%29.jpg",                                                                                                                                                                        order: "Accipitriformes",   family: "Accipitridae",                             genus: "Elanoides",      species: "E. forficatus" },
-  { id: 61,  name: "American Kestrel",             color: "#3d596b", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/American_kestrel_%28Falco_sparverius_cinnamominus%29_male_Leona_Amarga.jpg/960px-American_kestrel_%28Falco_sparverius_cinnamominus%29_male_Leona_Amarga.jpg",                                                                                                      order: "Falconiformes",     family: "Falconidae (Falcons)",                     genus: "Falco",          species: "F. sparverius" },
-  { id: 62,  name: "Common Grackle",               color: "#000000", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Common_grackle_in_PP_%2836732%29.jpg/500px-Common_grackle_in_PP_%2836732%29.jpg",                                                                                                                                                                                  order: "Passeriformes",     family: "Icteridae (New World blackbirds)",         genus: "Quiscalus",      species: "Q. quiscula" },
-  { id: 63,  name: "Fish Crow",                    color: "#808080", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Fish_crow_in_Red_Hook_%2842712%29.jpg/500px-Fish_crow_in_Red_Hook_%2842712%29.jpg",                                                                                                                                                                                 order: "Passeriformes",     family: "Corvidae (Corvids)",                       genus: "Corvus",         species: "C. ossifragus" },
-  { id: 64,  name: "Black Skimmer",                color: "#78b7ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Black_skimmer_Rynchops_niger.jpg/500px-Black_skimmer_Rynchops_niger.jpg",                                                                                                                                                                                          order: "Charadriiformes",   family: "Laridae (Seabirds)",                       genus: "Rynchops",       species: "R. niger" },
-  { id: 65,  name: "Belted Kingfisher",            color: "#103b57", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/BeltedKingfisherJG_Male.jpg/500px-BeltedKingfisherJG_Male.jpg",                                                                                                                                                                                                    order: "Coraciiformes",     family: "Alcedinidae (Kingfishers)",                genus: "Megaceryle",     species: "M. alcyon" },
-  { id: 66,  name: "Black-and-white Warbler",      color: "#78633d", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Black-and-white_warbler_in_Prospect_Park_%2806193%292.jpg/500px-Black-and-white_warbler_in_Prospect_Park_%2806193%292.jpg",                                                                                                                                       order: "Passeriformes",     family: "Parulidae (Wood-warblers)",                genus: "Miniotilta",     species: "M. varia" },
-  { id: 67,  name: "Wild Turkey",                  color: "#f58c14", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Gall-dindi.jpg/500px-Gall-dindi.jpg",                                                                                                                                                                                                                              order: "Galliformes",       family: "Phasianidae",                              genus: "Meleagris",      species: "M. gallopavo" },
-  { id: 68,  name: "Pine Warbler",                 color: "#78633d", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Pine_warbler_%2890070%29.jpg/500px-Pine_warbler_%2890070%29.jpg",                                                                                                                                                                                                   order: "Passeriformes",     family: "Parulidae (Wood-warblers)",                genus: "Setophaga",      species: "S. pinus" },
-  { id: 69,  name: "Black-bellied Plover",         color: "#bdf4ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Breeding_plumage_Black-bellied_plover_%28Pluvialis_squatarola%29_Great_Bay_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png/500px-Breeding_plumage_Black-bellied_plover_%28Pluvialis_squatarola%29_Great_Bay_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png", order: "Charadriiformes",   family: "Charadriidae",                             genus: "Pluvialis",      species: "P. squatarola" },
-  { id: 70,  name: "Northern Parula",              color: "#78633d", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/2014-05-21_Northern_Parula%2C_Shenandoah_NP%2C_Virginia_001200_07.jpg/500px-2014-05-21_Northern_Parula%2C_Shenandoah_NP%2C_Virginia_001200_07.jpg",                                                                                                              order: "Passeriformes",     family: "Parulidae (Wood-warblers)",                genus: "Setophaga",      species: "S. americana" },
-  { id: 71,  name: "Painted Bunting",              color: "#bf0016", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Male_Painted_Bunting_Singing.jpg/500px-Male_Painted_Bunting_Singing.jpg",                                                                                                                                                                                          order: "Passeriformes",     family: "Cardinalidae (New World Passerine)",       genus: "Passerina",      species: "P. ciris" },
-  { id: 72,  name: "Tufted Titmouse",              color: "#839c8b", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Tufted_titmouse_%2884917%29.jpg/500px-Tufted_titmouse_%2884917%29.jpg",                                                                                                                                                                                            order: "Passeriformes",     family: "Paridae",                                  genus: "Baeolophus",     species: "B. bicolor" },
-  { id: 73,  name: "American White Pelican",       color: "#9097d6", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/American_White_Pelican.jpg/500px-American_White_Pelican.jpg",                                                                                                                                                                                                      order: "Pelecaniformes",     family: "Pelecanidae (Pelicans)",                   genus: "Pelecanus",      species: "P. erythrorhynchos" },
-  { id: 74,  name: "Florida Scrub-Jay",            color: "#808080", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Adult_Florida_scrub_jay.jpg/500px-Adult_Florida_scrub_jay.jpg",                                                                                                                                                                                                    order: "Passeriformes",     family: "Corvidae (Corvids)",                       genus: "Aphelocoma",     species: "A. coerulescens" },
-  { id: 75,  name: "Common Yellowthroat",          color: "#78633d", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Common_yellowthroat_in_PP_%2814155%29.jpg/500px-Common_yellowthroat_in_PP_%2814155%29.jpg",                                                                                                                                                                        order: "Passeriformes",     family: "Parulidae (Wood-warblers)",                genus: "Geothlypis",     species: "G. trichas" },
-  { id: 76,  name: "Indian Peafowl",               color: "#f58c14", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Peacock_on_tree_%2852077240794%29.jpg/500px-Peacock_on_tree_%2852077240794%29.jpg",                                                                                                                                                                                order: "Galliformes",       family: "Phasianidae",                              genus: "Pavo",           species: "P. cristatus" },
-  { id: 77,  name: "Killdeer",                     color: "#bdf4ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Killdeer_Heislerville.png/500px-Killdeer_Heislerville.png",                                                                                                                                                                                                        order: "Charadriiformes",   family: "Charadriidae",                             genus: "Charadrius",     species: "C. vociferus" },
-  { id: 78,  name: "Reddish Egret",                color: "#79cbd4", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/ReddishEgret_Gam.jpg/500px-ReddishEgret_Gam.jpg",                                                                                                                                                                                                                  order: "Pelecaniformes",     family: "Ardeidae (Herons and Egrets)",             genus: "Egretta",        species: "E. rufescens" },
-  { id: 79,  name: "Brown Thrasher",               color: "#ed39d2", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Brown_thrasher_in_CP_%2802147%29.jpg/500px-Brown_thrasher_in_CP_%2802147%29.jpg",                                                                                                                                                                                  order: "Passeriformes",     family: "Mimidae (Mimids)",                         genus: "Toxostoma",      species: "T. rufum" },
-  { id: 80,  name: "Mottled Duck",                 color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/MottledDuck_Gam.jpg/500px-MottledDuck_Gam.jpg",                                                                                                                                                                                                                    order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Anas",           species: "A. fulvigula" },
-  { id: 81,  name: "Common Ground Dove",           color: "#a20fdb", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/CommonGroundDoveJG.jpg/500px-CommonGroundDoveJG.jpg",                                                                                                                                                                                                              order: "Columbiformes",     family: "Columbidae (Doves & Pigeons)",             genus: "Columbina",      species: "C. passerina" },
-  { id: 82,  name: "American Crow",                color: "#808080", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Corvus-brachyrhynchos-001.jpg/500px-Corvus-brachyrhynchos-001.jpg",                                                                                                                                                                                                order: "Passeriformes",     family: "Corvidae (Corvids)",                       genus: "Corvus",         species: "C. brachyrhynchos" },
-  { id: 83,  name: "Great Crested Flycatcher",     color: "#f8ff26", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/GreatCrestedFlycatcher.jpg/500px-GreatCrestedFlycatcher.jpg",                                                                                                                                                                                                     order: "Passeriformes",     family: "Tyrannidae (Tyrant Flycatchers)",          genus: "Myiarchus",      species: "M. crinitus" },
-  { id: 84,  name: "Magnificent Frigatebird",      color: "#e38e7f", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Fregata_magnificens_-Galapagos%2C_Ecuador_-male-8_%281%29.jpg/500px-Fregata_magnificens_-Galapagos%2C_Ecuador_-male-8_%281%29.jpg",                                                                                                                               order: "Suliformes",         family: "Fregatide (Frigatebirds)",                 genus: "Fregata",        species: "F. magnificens" },
-  { id: 85,  name: "Red Junglefowl",               color: "#f58c14", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Red_jungle_fowl.png/500px-Red_jungle_fowl.png",                                                                                                                                                                                                                    order: "Galliformes",       family: "Phasianidae",                              genus: "Gallus",         species: "G. gallus" },
-  { id: 86,  name: "European Starling",            color: "#e3dc19", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Toulouse_-_Sturnus_vulgaris_-_2012-02-26_-_3.jpg/500px-Toulouse_-_Sturnus_vulgaris_-_2012-02-26_-_3.jpg",                                                                                                                                                         order: "Passeriformes",     family: "Sturnidae (Starlings)",                    genus: "Sturnus",        species: "S. vulgaris" },
-  { id: 87,  name: "Prairie Warbler",              color: "#f58c14", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Prairie_Warbler_FL_Male_JG.jpg/500px-Prairie_Warbler_FL_Male_JG.jpg",                                                                                                                                                                                              order: "Passeriformes",     family: "Parulidae (Wood-warblers)",                genus: "Setophaga",      species: "S. discolor" },
-  { id: 88,  name: "Ruby-throated Hummingbird",    color: "#a84100", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Archilochus_colubris_-flying_-male-8.jpg/500px-Archilochus_colubris_-flying_-male-8.jpg",                                                                                                                                                                          order: "Apodiformes",       family: "Trochilidae (Hummingbirds)",               genus: "Archilochus",    species: "A. colubris" },
-  { id: 89,  name: "Sandwich Tern",                color: "#78b7ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/2021-07-10_Thalasseus_sandvicensis%2C_St_Marys_Island%2C_Northumberland_01.jpg/500px-2021-07-10_Thalasseus_sandvicensis%2C_St_Marys_Island%2C_Northumberland_01.jpg",                                                                                             order: "Charadriiformes",   family: "Laridae (Seabirds)",                       genus: "Thalasseus",     species: "T. sandvicensis" },
-  { id: 90,  name: "Cooper's Hawk",                color: "#fc4c00", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Accipiter_cooperii_m_Sam_Smith_Toronto3.jpg/500px-Accipiter_cooperii_m_Sam_Smith_Toronto3.jpg",                                                                                                                                                                    order: "Accipitriformes",   family: "Accipitridae",                             genus: "Astur",          species: "A. cooperii" },
-  { id: 91,  name: "Burrowing Owl",                color: "#7d6222", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Southern_burrowing_owl_%28Athene_cunicularia_cunicularia%29_Colonia.jpg/960px-Southern_burrowing_owl_%28Athene_cunicularia_cunicularia%29_Colonia.jpg",                                                                                                            order: "Strigiformes",      family: "Strigidae (Owls)",                         genus: "Athene",         species: "A. cunicularia" },
-  { id: 92,  name: "Red-tailed Hawk",              color: "#fc4c00", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Red-tailed_Hawk_%2845812546121%29.jpg/500px-Red-tailed_Hawk_%2845812546121%29.jpg",                                                                                                                                                                                order: "Accipitriformes",   family: "Accipitridae",                             genus: "Buteo",          species: "B. jamaicensis" },
-  { id: 93,  name: "Yellow-bellied Sapsucker",     color: "#7d0202", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Yellow-bellied_sapsucker_in_CP_%2840484%29.jpg/500px-Yellow-bellied_sapsucker_in_CP_%2840484%29.jpg",                                                                                                                                                               order: "Piciformes",        family: "Picidae (Woodpeckers)",                    genus: "Sphyrapicus",    species: "S. varius" },
-  { id: 94,  name: "American Redstart",            color: "#f58c14", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/American_redstart_in_JBWR_%2824754%29.jpg/500px-American_redstart_in_JBWR_%2824754%29.jpg",                                                                                                                                                                        order: "Passeriformes",     family: "Parulidae (Wood-warblers)",                genus: "Setophaga",      species: "S. ruticilla" },
-  { id: 95,  name: "White-eyed Vireo",             color: "#cca58d", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Edit_white-eyed_vireo_blandair_4.20.20_DSC_0224.jpg/500px-Edit_white-eyed_vireo_blandair_4.20.20_DSC_0224.jpg",                                                                                                                                                   order: "Passeriformes",     family: "Vireonidae (Vireos)",                      genus: "Vireo",          species: "V. griseus" },
-  { id: 96,  name: "Spotted Sandpiper",            color: "#c7b783", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Actitis-macularia-005.jpg/500px-Actitis-macularia-005.jpg",                                                                                                                                                                                                        order: "Charadriiformes",   family: "Scolopacidae (Sandpipers)",                genus: "Actitis",        species: "A. macularius" },
-  { id: 97,  name: "Greater Yellowlegs",           color: "#c7b783", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Greater_yellowlegs_%28Tringa_melanoleuca%29_foraging_at_Huntley_Meadows%2C_Alexandria%2C_Virginia%2C_USA.png/500px-Greater_yellowlegs_%28Tringa_melanoleuca%29_foraging_at_Huntley_Meadows%2C_Alexandria%2C_Virginia%2C_USA.png",                                 order: "Charadriiformes",   family: "Scolopacidae (Sandpipers)",                genus: "Tringa",         species: "T. melanoleuca" },
-  { id: 98,  name: "Savannah Sparrow",             color: "#47635d", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Passerculus_sandwichensis_crop.jpg/250px-Passerculus_sandwichensis_crop.jpg",                                                                                                                                                                                       order: "Passeriformes",     family: "Passerellidae (New World Sparrow)",        genus: "Passerculus",    species: "P. sandwichensis" },
-  { id: 99,  name: "Yellow-throated Warbler",      color: "#f58c14", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Setophaga_dominica%2C_Tisbury%2C_Martha%27s_Vineyard%2C_Massachusetts_496646966.jpg/250px-Setophaga_dominica%2C_Tisbury%2C_Martha%27s_Vineyard%2C_Massachusetts_496646966.jpg",                                                                                   order: "Passeriformes",     family: "Parulidae (Wood-warblers)",                genus: "Setophaga",      species: "S. dominica" },
-  { id: 100, name: "Wood Duck",                    color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Wood_Duck_Wissahickon_Creek.png/250px-Wood_Duck_Wissahickon_Creek.png",                                                                                                                                                                                            order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Aix",            species: "A. sponsa" },
-  { id: 101, name: "Black-necked Stilt",           color: "#9ab52f", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Black-necked_Stilt_%28Himantopus_mexicanus%29%2C_Corte_Madera.jpg/250px-Black-necked_Stilt_%28Himantopus_mexicanus%29%2C_Corte_Madera.jpg",                                                                                                                       order: "Charadriiformes",   family: "Recurvirostridae",                         genus: "Himantopus",     species: "H. mexicanus" },
-  { id: 102, name: "Least Sandpiper",              color: "#c7b783", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Least_Sandpiper_Foraging.png/250px-Least_Sandpiper_Foraging.png",                                                                                                                                                                                                  order: "Charadriiformes",   family: "Scolopacidae (Sandpipers)",                genus: "Calidris",       species: "C. minutilla" },
-  { id: 103, name: "Semipalmated Plover",          color: "#bdf4ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Semipalmated_Plover_%28Charadrius_semipalmatus%29_Heislerville_Wildlife_Management_Area%2C_New_Jersey%2C_USA.jpg/250px-Semipalmated_Plover_%28Charadrius_semipalmatus%29_Heislerville_Wildlife_Management_Area%2C_New_Jersey%2C_USA.jpg",                         order: "Charadriiformes",   family: "Charadriidae",                             genus: "Charadrius",     species: "C. semipalmatus" },
-  { id: 104, name: "Forster's Tern",               color: "#78b7ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Forster%27s_Tern%2C_Horicon_NWR%2C_Wisconsin.jpg/250px-Forster%27s_Tern%2C_Horicon_NWR%2C_Wisconsin.jpg",                                                                                                                                                        order: "Charadriiformes",   family: "Laridae (Seabirds)",                       genus: "Sterna",         species: "S. forsteri" },
-  { id: 105, name: "Gray-headed Swamphen",         color: "#69ffb6", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Grey-headed_swamphen_%28Porphyrio_poliocephalus%29_male.jpg/250px-Grey-headed_swamphen_%28Porphyrio_poliocephalus%29_male.jpg",                                                                                                                                    order: "Gruiformes",        family: "Rallidae (Rails)",                         genus: "Porphyrio",      species: "P. poliocephalus" },
-  { id: 106, name: "House Finch",                  color: "#af0fff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/House_finch_%2833688%292.jpg/250px-House_finch_%2833688%292.jpg",                                                                                                                                                                                                   order: "Passeriformes",     family: "Fringillidae (True Finches)",              genus: "Haemorhous",     species: "H. mexicanus" },
-  { id: 107, name: "Hooded Merganser",             color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Larus-fuscus-taxbox.jpg/250px-Larus-fuscus-taxbox.jpg",                                                                                                                                                                                                            order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Lophodytes",     species: "L. cucullatus" },
-  { id: 108, name: "Lesser Black-backed Gull",     color: "#78b7ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Larus-fuscus-taxbox.jpg/250px-Larus-fuscus-taxbox.jpg",                                                                                                                                                                                                            order: "Charadriiformes",   family: "Laridae (Seabirds)",                       genus: "Larus",          species: "L. fuscus" },
-  { id: 109, name: "Snail Kite",                   color: "#fc4c00", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Schneckenweih-Snail-Kite.JPG/250px-Schneckenweih-Snail-Kite.JPG",                                                                                                                                                                                                  order: "Accipitriformes",   family: "Accipitridae",                             genus: "Rostrhamus",     species: "R. sociabilis" },
-  { id: 110, name: "Carolina Chickadee",           color: "#839c8b", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Carolina_Chickadee1_by_Dan_Pancamo.jpg/250px-Carolina_Chickadee1_by_Dan_Pancamo.jpg",                                                                                                                                                                              order: "Passeriformes",     family: "Paridae",                                  genus: "Poecile",        species: "P. carolinensis" },
-  { id: 111, name: "Great Horned Owl",             color: "#7d6222", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Bubo_virginianus_06.jpg/250px-Bubo_virginianus_06.jpg",                                                                                                                                                                                                            order: "Strigiformes",      family: "Strigidae (Owls)",                         genus: "Bubo",           species: "B. virginianus" },
-  { id: 112, name: "American Robin",               color: "#053142", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/American_robin_%2871307%29.jpg/250px-American_robin_%2871307%29.jpg",                                                                                                                                                                                               order: "Passeriformes",     family: "Turdidae (Thrushes)",                      genus: "Turdus",         species: "T. migratorius" },
-  { id: 113, name: "Eastern Towhee",               color: "#47635d", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/20241004_eastern_towhee_pleasant_valley_PD207764.jpg/250px-20241004_eastern_towhee_pleasant_valley_PD207764.jpg",                                                                                                                                                  order: "Passeriformes",     family: "Passerellidae (New World Sparrow)",        genus: "Pipilo",         species: "P. erythrophthalmus" },
-  { id: 114, name: "Nanday Parakeet",              color: "#6e004f", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/2011-4_parrot_in_Strasbourg.jpg/250px-2011-4_parrot_in_Strasbourg.jpg",                                                                                                                                                                                            order: "Psittaciformes",    family: "Psittacidae (Holotropical Parrots)",       genus: "Aratinga",       species: "A. nenday" },
-  { id: 115, name: "Ovenbird",                     color: "#78633d", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Ovenbird_%2890497%29.jpg/250px-Ovenbird_%2890497%29.jpg",                                                                                                                                                                                                          order: "Passeriformes",     family: "Parulidae (Wood-warblers)",                genus: "Seiurus",        species: "S. aurocapilla" },
-  { id: 116, name: "American Herring Gull",        color: "#78b7ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Herring_Gull_Very_Close.jpg/250px-Herring_Gull_Very_Close.jpg",                                                                                                                                                                                                    order: "Charadriiformes",   family: "Laridae (Seabirds)",                       genus: "Larus",          species: "L. smithsonianus" },
-  { id: 117, name: "Eastern Meadowlark",           color: "#000000", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Eastern_meadowlark_%28Sturnella_magna_mexicana%29_Orange_Walk.jpg/330px-Eastern_meadowlark_%28Sturnella_magna_mexicana%29_Orange_Walk.jpg",                                                                                                                       order: "Passeriformes",     family: "Icteridae (New World blackbirds)",         genus: "Sturnella",      species: "S. magna" },
-  { id: 118, name: "Ring-necked Duck",             color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Ring-Necked_Duck.jpg/250px-Ring-Necked_Duck.jpg",                                                                                                                                                                                                                   order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Aythya",         species: "A. collaris" },
-  { id: 119, name: "Dunlin",                       color: "#c7b783", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Dunlin_%28Calidris_alpina%29_in_the_Delaware_Bay_at_Heislerville_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png/250px-Dunlin_%28Calidris_alpina%29_in_the_Delaware_Bay_at_Heislerville_Wildlife_Management_Area%2C_New_Jersey%2C_USA.png",                     order: "Charadriiformes",   family: "Scolopacidae (Sandpipers)",                genus: "Calidris",       species: "C. alpina" },
-  { id: 120, name: "Lesser Scaup",                 color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Drake_Lesser_Scaup_%28Aythya_affinis%29_Barengat_Inlet%2C_New_Jersey%2C_USA.jpg/250px-Drake_Lesser_Scaup_%28Aythya_affinis%29_Barengat_Inlet%2C_New_Jersey%2C_USA.jpg",                                                                                          order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Aythya",         species: "A. affinis" },
-  { id: 121, name: "Red-headed Woodpecker",        color: "#7d0202", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Melanerpes-erythrocephalus-003.jpg/250px-Melanerpes-erythrocephalus-003.jpg",                                                                                                                                                                                       order: "Piciformes",        family: "Picidae (Woodpeckers)",                    genus: "Melanerpes",     species: "M. erythrocephalus" },
-  { id: 122, name: "Eastern Screech-Owl",          color: "#7d6222", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Eastern_Screech_Owl.jpg/250px-Eastern_Screech_Owl.jpg",                                                                                                                                                                                                            order: "Strigiformes",      family: "Strigidae (Owls)",                         genus: "Megascops",      species: "M. asio" },
-  { id: 123, name: "Purple Martin",                color: "#ffd1fe", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/PurpleMartin_cajay.jpg/250px-PurpleMartin_cajay.jpg",                                                                                                                                                                                                              order: "Passeriformes",     family: "Hirundinidae",                             genus: "Progne",         species: "P. subis" },
-  { id: 124, name: "Northern Harrier",             color: "#fc4c00", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Circus_hudsonius%2C_male_perched%2C_Berkeley%2C_California_%28cropped%29.jpg/250px-Circus_hudsonius%2C_male_perched%2C_Berkeley%2C_California_%28cropped%29.jpg",                                                                                                  order: "Accipitriformes",   family: "Accipitridae",                             genus: "Circus",         species: "C. hudsonius" },
-  { id: 125, name: "Crested Caracara",             color: "#3d596b", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Schopfkarakara.jpg/250px-Schopfkarakara.jpg",                                                                                                                                                                                                                      order: "Falconiformes",     family: "Falconidae (Falcons)",                     genus: "Caracara",       species: "C. plancus" },
-  { id: 126, name: "Least Tern",                   color: "#78b7ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Least_Tern_%28Sternula_antillarum%29_RWD1.jpg/250px-Least_Tern_%28Sternula_antillarum%29_RWD1.jpg",                                                                                                                                                               order: "Charadriiformes",   family: "Laridae (Seabirds)",                       genus: "Sternula",       species: "S. antillarum" },
-  { id: 127, name: "American Oystercatcher",       color: "#781d2c", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/American_oystercatcher_on_Fort_Tilden_beach_%2893754%29.jpg/250px-American_oystercatcher_on_Fort_Tilden_beach_%2893754%29.jpg",                                                                                                                                   order: "Charadriiformes",   family: "Haematopodidae (Oystercatchers)",          genus: "Haematopus",     species: "H. palliatus" },
-  { id: 128, name: "Canada Goose",                 color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Canada_goose_on_Seedskadee_NWR_%2827826185489%29.jpg/250px-Canada_goose_on_Seedskadee_NWR_%2827826185489%29.jpg",                                                                                                                                                  order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Branta",         species: "B. candensis" },
-  { id: 129, name: "Short-tailed Hawk",            color: "#fc4c00", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Buteo_brachyurus_-Manduri%2C_Sao_Paulo%2C_Brazil_-flying-8.jpg/250px-Buteo_brachyurus_-Manduri%2C_Sao_Paulo%2C_Brazil_-flying-8.jpg",                                                                                                                            order: "Accipitriformes",   family: "Accipitridae",                             genus: "Buteo",          species: "B. brachyurus" },
-  { id: 130, name: "Monk Parakeet",                color: "#6e004f", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Monk_parakeet_%28Myiopsitta_monachus%29_Santiago.jpg/250px-Monk_parakeet_%28Myiopsitta_monachus%29_Santiago.jpg",                                                                                                                                                  order: "Psittaciformes",    family: "Psittacidae (Holotropical Parrots)",       genus: "Myiopsitta",     species: "M. monachus" },
-  { id: 131, name: "Red Knot",                     color: "#c7b783", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Rufa_red_knot_%28Calidris_canutus_rufa%29_in_Delaware_Bay%2C_New_Jersey.jpg/250px-Rufa_red_knot_%28Calidris_canutus_rufa%29_in_Delaware_Bay%2C_New_Jersey.jpg",                                                                                                  order: "Charadriiformes",   family: "Scolopacidae (Sandpipers)",                genus: "Calidris",       species: "C. canutus" },
-  { id: 132, name: "Redhead",                      color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Redhead_-_Aythya_americana%2C_Oakley_Street%2C_Cambridge%2C_Maryland.jpg/250px-Redhead_-_Aythya_americana%2C_Oakley_Street%2C_Cambridge%2C_Maryland.jpg",                                                                                                        order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Aythya",         species: "A. americana" },
-  { id: 133, name: "Bufflehead",                   color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Drake_Bufflehead_LBI_%28cropped%29.png/250px-Drake_Bufflehead_LBI_%28cropped%29.png",                                                                                                                                                                               order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Bucephala",      species: "B. albeola" },
-  { id: 134, name: "American Flamingo",            color: "#ff9eff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/American_Flamingo_JG.jpg/250px-American_Flamingo_JG.jpg",                                                                                                                                                                                                          order: "Phoenicopteriformes", family: "Phoenicopteridae (Flamingoes)",           genus: "Phoenicopterus", species: "P. ruber" },
-  { id: 135, name: "Green-winged Teal",            color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Green-winged_Teal%2C_Port_Aransas%2C_Texas.jpg/250px-Green-winged_Teal%2C_Port_Aransas%2C_Texas.jpg",                                                                                                                                                             order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Anas",           species: "A. carolinensis" },
-  { id: 136, name: "Vermilion Flycatcher",         color: "#f8ff26", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Karmintyrann_%28Pyrocephalus_obscurus%29%2C_M%C3%A4nnchen_1.jpg/250px-Karmintyrann_%28Pyrocephalus_obscurus%29%2C_M%C3%A4nnchen_1.jpg",                                                                                                                          order: "Passeriformes",     family: "Tyrannidae (Tyrant Flycatchers)",          genus: "Pyrocephalus",   species: "P. obscurus" },
-  { id: 137, name: "Ruddy Duck",                   color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Ruddy_Duck_%28Oxyura_jamaicensis%29_RWD2.jpg/250px-Ruddy_Duck_%28Oxyura_jamaicensis%29_RWD2.jpg",                                                                                                                                                                  order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Oxyura",         species: "O. jamaicensis" },
-  { id: 138, name: "Red-masked Parakeet",          color: "#6e004f", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Red-masked_Parakeet-Aratinga_erythrogenys_in_a_tree.jpg/250px-Red-masked_Parakeet-Aratinga_erythrogenys_in_a_tree.jpg",                                                                                                                                           order: "Psittaciformes",    family: "Psittacidae (Holotropical Parrots)",       genus: "Psittacara",     species: "P. erythrogenys" },
-  { id: 139, name: "Scarlet Tanager",              color: "#bf0016", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Scarlet_tanager_in_GWC_%2850867%29.jpg/250px-Scarlet_tanager_in_GWC_%2850867%29.jpg",                                                                                                                                                                              order: "Passeriformes",     family: "Cardinalidae (New World Passerine)",       genus: "Piranga",        species: "P. olivacea" },
-  { id: 140, name: "Brown Noddy",                  color: "#78b7ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Common_noddy_%28Anous_stolidus_pileatus%29_in_flight_Michaelmas_Cay.jpg/250px-Common_noddy_%28Anous_stolidus_pileatus%29_in_flight_Michaelmas_Cay.jpg",                                                                                                           order: "Charadriiformes",   family: "Laridae (Seabirds)",                       genus: "Anous",          species: "A. stolidus" },
-  { id: 141, name: "Swan Goose",                   color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Anser_cygnoides%2C_Ozero_Stepnoye%2C_Ivolginskiy%2C_Buryatia_Republic%2C_Russia_1_%28cropped%29.jpg/250px-Anser_cygnoides%2C_Ozero_Stepnoye%2C_Ivolginskiy%2C_Buryatia_Republic%2C_Russia_1_%28cropped%29.jpg",                                                 order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Anser",          species: "A. cygnoides" },
-  { id: 142, name: "Mute Swan",                    color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/CygneVaires.jpg/250px-CygneVaires.jpg",                                                                                                                                                                                                                            order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Cygnus",         species: "C. olor" },
-  { id: 143, name: "Black Tern",                   color: "#78b7ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/%C4%8Cor%C3%ADk_%C4%8Dierny_%28Chlidonias_niger%29_a_%284644831482%29.jpg/250px-%C4%8Cor%C3%ADk_%C4%8Dierny_%28Chlidonias_niger%29_a_%284644831482%29.jpg",                                                                                                      order: "Charadriiformes",   family: "Laridae (Seabirds)",                       genus: "Chlidonias",     species: "C. niger" },
-  { id: 144, name: "Bobolink",                     color: "#000000", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/20250702_adult_male_bobolink_glastonbury_meadows_squre_PD206841.jpg/250px-20250702_adult_male_bobolink_glastonbury_meadows_squre_PD206841.jpg",                                                                                                                    order: "Passeriformes",     family: "Icteridae (New World blackbirds)",         genus: "Dolichonyx",     species: "D. oryzivorus" },
-  { id: 145, name: "Black Scoter",                 color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/7/7e/BlackScoter_mosbo6.jpg",                                                                                                                                                                                                                                                  order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Melanitta",      species: "M. americana" },
-  { id: 146, name: "Horned Grebe",                 color: "#d6d283", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Podiceps_auritus_%2813909539717%29.jpg/250px-Podiceps_auritus_%2813909539717%29.jpg",                                                                                                                                                                               order: "Podicipediformes",  family: "Podicipedidae (Grebes)",                   genus: "Podiceps",       species: "P. auritus" },
-  { id: 147, name: "Blue-and-yellow Macaw",        color: "#6e004f", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Ara_ararauna_Luc_Viatour.jpg/250px-Ara_ararauna_Luc_Viatour.jpg",                                                                                                                                                                                                  order: "Psittaciformes",    family: "Psittacidae (Holotropical Parrots)",       genus: "Ara",            species: "A. ararauna" },
-  { id: 148, name: "Greylag Goose",                color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Greylag_Goose_-_St_James%27s_Park%2C_London_-_Nov_2006.jpg/250px-Greylag_Goose_-_St_James%27s_Park%2C_London_-_Nov_2006.jpg",                                                                                                                                    order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Anser",          species: "A. anser" },
-  { id: 149, name: "Surf Scoter",                  color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Surf_Scoter_Drake_LBI.png/250px-Surf_Scoter_Drake_LBI.png",                                                                                                                                                                                                        order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Melanitta",      species: "M. perspicillata" },
-  { id: 150, name: "Cinnamon Teal",                color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Sarcelle_cannelle_%28Spatula_cyanoptera%29.jpg/250px-Sarcelle_cannelle_%28Spatula_cyanoptera%29.jpg",                                                                                                                                                               order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Spatula",        species: "S. cyanoptera" },
-  { id: 151, name: "Long-tailed Duck",             color: "#1787ff", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Long-tailed-duck.jpg/250px-Long-tailed-duck.jpg",                                                                                                                                                                                                                  order: "Anseriformes",      family: "Anatidae (Waterfowl)",                     genus: "Clangula",       species: "C. hyemalis" },
-];
-
-/* ── localStorage helpers ── */
-const SEEN_KEY     = 'floridex_seen';
-const SIGHTING_KEY = 'floridex_sightings';
-
-function loadSeenIds(): Set<number> {
-  try {
-    const raw = localStorage.getItem(SEEN_KEY);
-    return raw ? new Set<number>(JSON.parse(raw)) : new Set();
-  } catch { return new Set(); }
-}
-function saveSeenIds(set: Set<number>): void {
-  try { localStorage.setItem(SEEN_KEY, JSON.stringify([...set])); } catch {}
-}
-function loadSightings(): Record<number, Sighting> {
-  try {
-    const raw = localStorage.getItem(SIGHTING_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch { return {}; }
+/* ── Get userId from localStorage (set at login) ── */
+function getUserId(): string | null {
+  try { return localStorage.getItem('userId'); } catch { return null; }
 }
 
 /* ══════════════════════════════════════════════
    Floridex page
    ══════════════════════════════════════════════ */
 export default function Floridex() {
-  const [seenIds,      setSeenIds]      = useState<Set<number>>(loadSeenIds);
-  const [sightings,    setSightings]    = useState<Record<number, Sighting>>(loadSightings);
+  /* ── Remote bird data ── */
+  const [birds, setBirds] = useState<Bird[]>([]);
+
+  /* ── Seen state — sourced from account API ── */
+  const [seenIds, setSeenIds] = useState<Set<number>>(new Set());
+
+  /* ── Sighting metadata (date / city) — sourced from account API ── */
+  const [sightings, setSightings] = useState<Record<number, Sighting>>({});
+
+  /* ── Loading / error state ── */
+  const [loadingSeenIds, setLoadingSeenIds] = useState(true);
+
+  /* ── Filter / sort state ── */
   const [search,       setSearch]       = useState('');
   const [seenFilter,   setSeenFilter]   = useState<SeenFilter>('all');
   const [familyFilter, setFamilyFilter] = useState('');
   const [sortBy,       setSortBy]       = useState<SortMode>('index');
+
+  /* ── Modal state ── */
   const [selectedBird, setSelectedBird] = useState<Bird | null>(null);
 
-  /* Sync sightings from server on mount if logged in */
+  /* ── Fetch all birds from Express API ── */
   useEffect(() => {
-    const userId = localStorage.getItem('userID');
-    if (!userId) return;
-
-    fetch(`/api/sightings?userId=${userId}`)
-      .then(r => r.json())
-      .then((data: { birdId: number; seen: boolean; date?: string; city?: string }[]) => {
-        const ids = new Set<number>();
-        const sightingMap: Record<number, Sighting> = {};
-        for (const s of data) {
-          if (s.seen) ids.add(s.birdId);
-          if (s.date || s.city) sightingMap[s.birdId] = { date: s.date, city: s.city };
-        }
-        setSeenIds(ids);
-        setSightings(sightingMap);
-        saveSeenIds(ids);
-      })
-      .catch(() => { /* fall back to localStorage */ });
+    fetch('/api/birds')
+      .then((res) => res.json())
+      .then((data: Bird[]) => setBirds(data))
+      .catch(console.error);
   }, []);
 
-  /* Toggle seen — persist locally and sync to server */
+  /* ── Fetch saved birds for this account from the API ── */
+  useEffect(() => {
+    const userId = getUserId();
+    if (!userId) {
+      setLoadingSeenIds(false);
+      return;
+    }
+
+    setLoadingSeenIds(true);
+
+    fetch('/api/get-saved-birds', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          console.error('get-saved-birds error:', data.error);
+          return;
+        }
+
+        const ids = new Set<number>();
+        const newSightings: Record<number, Sighting> = {};
+
+        for (const bird of data.identfiedBirds ?? []) {
+          // The API returns full bird objects merged with metadata.
+          // ID field matches the Birds collection.
+          const id = Number(bird.ID ?? bird.id);
+          if (!Number.isFinite(id)) continue;
+
+          ids.add(id);
+
+          if (bird.foundCity || bird.foundDate) {
+            newSightings[id] = {
+              city: bird.foundCity ?? undefined,
+              date: bird.foundDate ?? undefined,
+            };
+          }
+        }
+
+        setSeenIds(ids);
+        setSightings(newSightings);
+      })
+      .catch(console.error)
+      .finally(() => setLoadingSeenIds(false));
+  }, []);
+
+  /* ── Toggle seen — calls /api/save-bird (add) or /api/unsave-bird (remove) ── */
   function toggleSeen(id: number): void {
-    setSeenIds(prev => {
+    const userId = getUserId();
+    if (!userId) return;
+
+    const isCurrentlySeen = seenIds.has(id);
+
+    // Optimistic UI update
+    setSeenIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else              next.add(id);
-      saveSeenIds(next);
-
-      const userId = localStorage.getItem('userID');
-      if (userId) {
-        fetch('/api/sightings', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId, birdId: id, seen: next.has(id) }),
-        }).catch(() => {});
-      }
-
       return next;
     });
+
+    if (isCurrentlySeen) {
+      // Remove from account — call unsave endpoint if available,
+      // otherwise re-fetch after a short delay to stay in sync.
+      fetch('/api/unsave-bird', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, birdId: String(id) }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            console.error('unsave-bird error:', data.error);
+            // Revert optimistic update on failure
+            setSeenIds((prev) => { const next = new Set(prev); next.add(id); return next; });
+          }
+        })
+        .catch((err) => {
+          console.error('unsave-bird failed:', err);
+          setSeenIds((prev) => { const next = new Set(prev); next.add(id); return next; });
+        });
+    } else {
+      // Save to account
+      const sighting = sightings[id];
+      fetch('/api/save-bird', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          birdId: String(id),
+          foundCity: sighting?.city ?? undefined,
+          foundDate: sighting?.date ?? undefined,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            console.error('save-bird error:', data.error);
+            // Revert optimistic update on failure
+            setSeenIds((prev) => { const next = new Set(prev); next.delete(id); return next; });
+          }
+        })
+        .catch((err) => {
+          console.error('save-bird failed:', err);
+          setSeenIds((prev) => { const next = new Set(prev); next.delete(id); return next; });
+        });
+    }
   }
 
-  /* families derived from static BIRDS — computed once */
+  /* ── Derived data ── */
   const families = useMemo(
-    () => [...new Set(BIRDS.map(b => b.family))].sort(),
-    []
+    () => [...new Set(birds.map((b) => b.family))].sort(),
+    [birds]
   );
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    let list = BIRDS.slice();
+    let list = birds.slice();
 
     if (q)
-      list = list.filter(b =>
-        b.name.toLowerCase().includes(q) ||
-        b.family.toLowerCase().includes(q)
+      list = list.filter(
+        (b) =>
+          b.name.toLowerCase().includes(q) ||
+          b.family.toLowerCase().includes(q)
       );
+
     if (familyFilter)
-      list = list.filter(b => b.family === familyFilter);
+      list = list.filter((b) => b.family === familyFilter);
+
     if (seenFilter === 'seen')
-      list = list.filter(b => seenIds.has(b.id));
+      list = list.filter((b) => seenIds.has(b.id));
     else if (seenFilter === 'unseen')
-      list = list.filter(b => !seenIds.has(b.id));
+      list = list.filter((b) => !seenIds.has(b.id));
+
     if (sortBy === 'name')
       list.sort((a, b) => a.name.localeCompare(b.name));
     else if (sortBy === 'family')
       list.sort((a, b) => a.family.localeCompare(b.family) || a.id - b.id);
 
     return list;
-  }, [search, familyFilter, seenFilter, sortBy, seenIds]);
+  }, [birds, search, familyFilter, seenFilter, sortBy, seenIds]);
+
+  const seenCount = useMemo(
+    () => birds.filter((b) => seenIds.has(b.id)).length,
+    [birds, seenIds]
+  );
+
+  // Birds that are seen — passed to Header for the multi-color progress bar
+  const seenBirds = useMemo(
+    () => birds.filter((b) => seenIds.has(b.id)),
+    [birds, seenIds]
+  );
 
   return (
-    <div className="floridex-page">
-      <Header />
+    <div className="home-page">
+      {/* Sticky header: logo + title + progress + logout + Log Bird */}
+      <Header/>
 
+      {/* Controls strip: search + family filter + seen filter + sort */}
       <SearchBar
         search={search}
         setSearch={setSearch}
@@ -300,15 +235,18 @@ export default function Floridex() {
         sortBy={sortBy}
         setSortBy={setSortBy}
         families={families}
-        totalCount={BIRDS.length}
+        totalCount={birds.length}
         resultsCount={filtered.length}
       />
 
+      {/* Bird grid */}
       <div id="grid">
-        {filtered.length === 0 ? (
+        {loadingSeenIds ? (
+          <div className="no-results">Loading your Floridex…</div>
+        ) : filtered.length === 0 ? (
           <div className="no-results">No birds match your search.</div>
         ) : (
-          filtered.map(bird => (
+          filtered.map((bird) => (
             <BirdCard
               key={bird.id}
               bird={bird}
@@ -319,8 +257,10 @@ export default function Floridex() {
         )}
       </div>
 
+      {/* Footer */}
       <Footer />
 
+      {/* Bird detail modal — only mounts when a bird is selected */}
       <BirdModal
         bird={selectedBird}
         isSeen={selectedBird ? seenIds.has(selectedBird.id) : false}
