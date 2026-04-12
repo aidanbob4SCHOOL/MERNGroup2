@@ -1,0 +1,111 @@
+/* ─────────────────────────────────────────────
+   SearchBar.css
+   Matches floridex.html  #controls-bar / #controls-left / inputs / buttons
+   ───────────────────────────────────────────── */
+
+/* Controls bar strip — sits below the header */
+#controls-bar {
+  background: #f0f7f4;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 0.6rem 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Left cluster — search + filter + sort */
+#controls-left {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+/* Search input — pill shape */
+#search-input {
+  font-size: 0.82rem;
+  border: 1.5px solid #b0c8c0;
+  border-radius: 20px;
+  padding: 0.35rem 0.85rem;
+  width: 190px;
+  background: #fff;
+  outline: none;
+  color: #111;
+  font-family: 'Inter', sans-serif;
+}
+#search-input:focus {
+  border-color: #4a826c;
+}
+
+/* Filter panel and Sort panel — flex rows */
+#filter-panel,
+#sort-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* "FILTER" / "SORT" uppercase labels */
+.ctrl-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Family and Sort dropdowns — pill shape */
+#family-select,
+#sort-select {
+  font-size: 0.78rem;
+  border: 1.5px solid #b0c8c0;
+  border-radius: 14px;
+  padding: 0.28rem 0.65rem;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+}
+#family-select:focus,
+#sort-select:focus {
+  border-color: #4a826c;
+}
+
+/* All / Seen / Not Seen button group */
+#seen-filter-btns {
+  display: flex;
+  gap: 4px;
+}
+
+.seen-btn {
+  font-size: 0.72rem;
+  border: 1.5px solid #b0c8c0;
+  border-radius: 14px;
+  padding: 0.25rem 0.65rem;
+  background: #fff;
+  color: #555;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.seen-btn.active {
+  background: #2d6050;
+  color: #fff;
+  border-color: #2d6050;
+}
+.seen-btn:hover:not(.active) {
+  background: #e0efea;
+  border-color: #4a826c;
+}
+
+/* "Showing X of Y birds" — italic gray */
+#results-label {
+  font-size: 0.78rem;
+  color: #777;
+  font-style: italic;
+  font-family: 'Inter', sans-serif;
+}

@@ -1,0 +1,65 @@
+/* ─────────────────────────────────────────────
+   Home.css
+   Matches floridex.html  body / #grid / #app-footer / .no-results
+   ───────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+/* Page wrapper — full-height flex column */
+.home-page {
+  background: #F5FFF3;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Bird grid ──
+   5-column, fixed 160px tiles, centred.
+   Extra padding provides breathing room below the sticky header.  */
+#grid {
+  display: grid;
+  grid-template-columns: repeat(5, 160px);
+  gap: 1.25rem;
+  justify-content: center;
+  align-content: start;
+  padding: 1.5rem;
+  flex: 1;
+}
+
+/* Empty-state message */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 1rem;
+  color: #aaa;
+  padding: 3rem 0;
+}
+
+/* ── Footer ──
+   Defined here so Footer component only needs a <footer id="app-footer"> */
+#app-footer {
+  background: #1e4a3a;
+  text-align: center;
+  padding: 0.9rem 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #7abfa8;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-top: 2px solid #163829;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Responsive breakpoints ── */
+@media (max-width: 900px) {
+  #grid {
+    grid-template-columns: repeat(3, 160px);
+  }
+}
+
+@media (max-width: 580px) {
+  #grid {
+    grid-template-columns: repeat(2, 160px);
+  }
+}

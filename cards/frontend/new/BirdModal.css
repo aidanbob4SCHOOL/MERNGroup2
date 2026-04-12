@@ -1,0 +1,171 @@
+/* ─────────────────────────────────────────────
+   BirdModal.css
+   Matches floridex.html  #modal-overlay / #modal / #modal-* styles
+   ───────────────────────────────────────────── */
+
+/* Full-screen darkened backdrop */
+#modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+}
+/* .open activates flex layout */
+#modal-overlay.open {
+  display: flex;
+}
+
+/* ── Modal card ── */
+#modal {
+  background: #ffffff;
+  max-width: 580px;
+  width: 94%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Header bar: grey strip with title + badge ── */
+#modal-header {
+  background: #d9d9d9;
+  padding: 0.75rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 2px solid #bbb;
+}
+
+#modal-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #111;
+  flex: 1;
+}
+
+/* FOUND / NOT FOUND pill badge */
+#modal-status {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+#modal-status.not-found {
+  background: #c0392b;
+  color: #fff;
+}
+#modal-status.found {
+  background: #27ae60;
+  color: #fff;
+}
+
+/* ✕ close button — absolute top-right of modal */
+#modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.7rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  font-weight: 700;
+  background: none;
+  border: none;
+  color: #555;
+  line-height: 1;
+  z-index: 10;
+  font-family: 'Inter', sans-serif;
+}
+#modal-close:hover {
+  color: #111;
+}
+
+/* ── Body: photo + taxonomy ── */
+#modal-body {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.2rem 0;
+  min-height: 180px;
+}
+
+/* Bird photo */
+#modal-img {
+  width: 210px;
+  flex-shrink: 0;
+  height: 170px;
+  object-fit: cover;
+  border: 2.5px solid #4a7aad;
+  border-radius: 3px;
+}
+
+/* Taxonomy text column */
+#modal-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0;
+}
+
+.tax-line {
+  font-size: 0.82rem;
+  color: #111;
+  line-height: 1.85;
+}
+.tax-line strong {
+  font-weight: 700;
+}
+.tax-line em {
+  font-style: italic;
+}
+
+/* Sighting section — separated by a rule */
+#modal-sighting {
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid #bbb;
+  font-size: 0.82rem;
+  color: #111;
+  line-height: 2;
+}
+.s-line strong {
+  font-weight: 700;
+}
+
+/* Date / city values — italic grey */
+.sighting-val {
+  font-size: 0.82rem;
+  color: #444;
+  font-style: italic;
+}
+
+/* ── Footer CTA button ── */
+#modal-footer {
+  margin-top: 1rem;
+  background: #c0392b;   /* red = "mark as found" state */
+  padding: 0.55rem 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+}
+/* Grey = "mark as not found" state (bird is already seen) */
+#modal-footer.seen-footer {
+  background: #555;
+}
+
+#modal-footer-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
