@@ -1,0 +1,129 @@
+.log-bird-page {
+  min-height: 100vh;
+  background: #f5fff3;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-bird-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 36px 20px;
+}
+
+.default-state,
+.identified-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.compare-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.bird-example {
+  margin: 0;
+}
+
+.example-image,
+.identified-bird-image {
+  width: 280px;
+  max-width: 40vw;
+  border: 2px solid #d5dfd8;
+  display: block;
+}
+
+.greyed {
+  filter: grayscale(100%);
+}
+
+.log-bird-arrow {
+  font-size: 84px;
+  font-weight: 700;
+  line-height: 1;
+  color: #111;
+}
+
+.bird-example figcaption {
+  margin-top: 8px;
+  color: #4f9477;
+  font-size: 20px;
+}
+
+.upload-help,
+.identified-text {
+  color: #4f9477;
+  font-size: 26px;
+  line-height: 1.4;
+}
+
+.upload-btn,
+.action-btn {
+  border: none;
+  border-radius: 999px;
+  background: #4a8c6e;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 700;
+  padding: 10px 36px;
+  cursor: pointer;
+}
+
+.upload-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.identified-actions {
+  display: flex;
+  gap: 22px;
+}
+
+.cancel-btn {
+  background: #6f7f75;
+}
+
+.upload-error {
+  color: #b42318;
+  font-size: 16px;
+}
+
+.file-input {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .compare-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .log-bird-arrow {
+    transform: rotate(90deg);
+    font-size: 56px;
+  }
+
+  .example-image,
+  .identified-bird-image {
+    width: 260px;
+    max-width: 85vw;
+  }
+
+  .upload-help,
+  .identified-text {
+    font-size: 20px;
+  }
+
+  .upload-btn,
+  .action-btn {
+    font-size: 24px;
+  }
+}
+

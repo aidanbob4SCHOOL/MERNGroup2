@@ -7,6 +7,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
 import Floridex from './pages/Floridex';
+import LogBird from './pages/LogBird';
 import './App.css';
 
 function App(): JSX.Element {
@@ -25,9 +26,9 @@ function App(): JSX.Element {
           <ProtectedRoute><Floridex /></ProtectedRoute>
         } />
 
-        {/*<Route path="/log-bird" element={*/}
-        {/*    <ProtectedRoute><LogBird /></ProtectedRoute>*/}
-        {/*} />*/}
+        <Route path="/log-bird" element={
+            <ProtectedRoute><LogBird /></ProtectedRoute>
+        } />
       </Routes>
     </BrowserRouter>
   );

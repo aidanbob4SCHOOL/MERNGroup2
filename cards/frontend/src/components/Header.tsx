@@ -48,7 +48,7 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
 
             <div className="header-right">
                 {isLoggedIn ? (
-                    <Link to="/floridex" className="log-bird-btn">
+                    <Link to="/log-bird" className="log-bird-btn">
                         Log Bird
                     </Link>
                 ) : (
