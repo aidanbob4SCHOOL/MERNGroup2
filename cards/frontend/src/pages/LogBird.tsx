@@ -54,10 +54,10 @@ function LogBird(): JSX.Element {
       });
 
       const data: IdentifyBirdResponse = await response.json();
-      const responseError = data?.error || (!response.ok ? 'BirdBrain could not identify that image.' : '');
+      const responseError = data.error || (!response.ok ? 'BirdBrain could not identify that image.' : '');
 
-      if (responseError) {
-        setUploadError(responseError);
+      if (responseError || !data.name || !data.image) {
+        setUploadError(responseError || 'BirdBrain response is missing bird details.');
         setIdentifiedBird(null);
         return;
       }
@@ -83,7 +83,7 @@ function LogBird(): JSX.Element {
   }
 
   const identifiedImageSrc = identifiedBird
-    ? `/images/birds/${encodeURIComponent(identifiedBird.name)}.jpg`
+    ? identifiedBird.image
     : '';
 
   return (
