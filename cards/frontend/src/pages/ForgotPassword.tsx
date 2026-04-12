@@ -65,7 +65,7 @@ function ForgotPassword(): JSX.Element {
                     <input
                         ref={identifierRef}
                         type="text"
-                        placeholder="username or email"
+                        placeholder="username/email"
                         autoComplete="username"
                         className="forgot-input"
                     />

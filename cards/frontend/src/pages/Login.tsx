@@ -75,10 +75,10 @@ function Login(): JSX.Element {
 
   async function doSignup(): Promise<void> {
     const email = emailRef.current?.value.trim() ?? '';
-    const username = usernameRef.current?.value.trim() ?? '';
+    const login = usernameRef.current?.value.trim() ?? '';
     const password = passwordRef.current?.value.trim() ?? '';
 
-    if (!email || !username || !password) {
+    if (!email || !login || !password) {
       showPanel('error', 'Error', 'Please fill in all fields.');
       return;
     }
@@ -89,7 +89,7 @@ function Login(): JSX.Element {
       const response = await fetch('/api/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ login, email, password }),
       });
 
       const data = await response.json();
@@ -107,10 +107,10 @@ function Login(): JSX.Element {
   }
 
   async function doLogin(): Promise<void> {
-    const identifier = usernameRef.current?.value.trim() ?? '';
+    const login = usernameRef.current?.value.trim() ?? '';
     const password = passwordRef.current?.value.trim() ?? '';
 
-    if (!identifier || !password) {
+    if (!login || !password) {
       showPanel('error', 'Error', 'Please enter both a username/email and password.');
       return;
     }
@@ -121,7 +121,7 @@ function Login(): JSX.Element {
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier, password }),
+        body: JSON.stringify({ login, password }),
       });
 
       const data = await response.json();
