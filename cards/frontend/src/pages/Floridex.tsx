@@ -185,6 +185,9 @@ const BIRDS: Bird[] = [
 
 /* ══════════════════════════════════════════════
    Floridex page
+   All seen/sighting state lives in the DB.
+   localStorage is only used to read 'userID'
+   (the MongoDB _id set by Login / VerifyEmail).
    ══════════════════════════════════════════════ */
 export default function Floridex() {
   const [seenIds,      setSeenIds]      = useState<Set<number>>(new Set());
@@ -196,9 +199,9 @@ export default function Floridex() {
   const [sortBy,       setSortBy]       = useState<SortMode>('index');
   const [selectedBird, setSelectedBird] = useState<Bird | null>(null);
 
-  /* ── Load saved birds from account on mount ── */
+  /* ── On mount: load this user's saved birds from the DB ── */
   useEffect(() => {
-    const userId = localStorage.getItem('userID');
+    const userId = localStorage.getItem('userID'); // set by Login.tsx / VerifyEmail.tsx
     if (!userId) { setLoading(false); return; }
 
     fetch('/api/get-saved-birds', {
@@ -218,7 +221,10 @@ export default function Floridex() {
           if (!Number.isFinite(id)) continue;
           ids.add(id);
           if (bird.foundCity || bird.foundDate) {
-            sightingMap[id] = { city: bird.foundCity ?? undefined, date: bird.foundDate ?? undefined };
+            sightingMap[id] = {
+              city: bird.foundCity ?? undefined,
+              date: bird.foundDate ?? undefined,
+            };
           }
         }
 
@@ -229,65 +235,68 @@ export default function Floridex() {
       .finally(() => setLoading(false));
   }, []);
 
-  /* ── Toggle seen — calls /api/save-bird with foundCity + foundDate ── */
-  function toggleSeen(id: number, city?: string, date?: string): void {
+  /* ── Mark seen: POST /api/save-bird with foundCity + foundDate ── */
+  function saveBird(id: number, city?: string, date?: string): void {
     const userId = localStorage.getItem('userID');
     if (!userId) return;
 
-    const willBeSeen = !seenIds.has(id);
+    // Optimistic UI
+    setSeenIds(prev => new Set(prev).add(id));
+    if (city || date) {
+      setSightings(prev => ({
+        ...prev,
+        [id]: { city: city ?? prev[id]?.city, date: date ?? prev[id]?.date },
+      }));
+    }
 
-    // Optimistic update
-    setSeenIds(prev => {
-      const next = new Set(prev);
-      willBeSeen ? next.add(id) : next.delete(id);
-      return next;
-    });
-
-    if (willBeSeen) {
-      // Update sighting metadata if provided
-      if (city || date) {
-        setSightings(prev => ({
-          ...prev,
-          [id]: { city: city ?? prev[id]?.city, date: date ?? prev[id]?.date },
-        }));
-      }
-
-      fetch('/api/save-bird', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId,
-          birdId: id,
-          foundCity: city ?? sightings[id]?.city ?? undefined,
-          foundDate: date ?? sightings[id]?.date ?? undefined,
-        }),
-      })
-        .then(r => r.json())
-        .then(data => {
-          if (data.error) {
-            // Revert on failure
-            setSeenIds(prev => { const next = new Set(prev); next.delete(id); return next; });
-          }
-        })
-        .catch(() => {
+    fetch('/api/save-bird', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, birdId: id, foundCity: city, foundDate: date }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) {
+          // Revert on failure
           setSeenIds(prev => { const next = new Set(prev); next.delete(id); return next; });
-        });
-    } else {
-      // Unsave: call unsave endpoint
-      fetch('/api/unsave-bird', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, birdId: id }),
+        }
       })
-        .then(r => r.json())
-        .then(data => {
-          if (data.error) {
-            setSeenIds(prev => { const next = new Set(prev); next.add(id); return next; });
-          }
-        })
-        .catch(() => {
-          setSeenIds(prev => { const next = new Set(prev); next.add(id); return next; });
-        });
+      .catch(() => {
+        setSeenIds(prev => { const next = new Set(prev); next.delete(id); return next; });
+      });
+  }
+
+  /* ── Mark unseen: POST /api/unsave-bird ── */
+  function unsaveBird(id: number): void {
+    const userId = localStorage.getItem('userID');
+    if (!userId) return;
+
+    // Optimistic UI
+    setSeenIds(prev => { const next = new Set(prev); next.delete(id); return next; });
+
+    fetch('/api/unsave-bird', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, birdId: id }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) {
+          // Revert on failure
+          setSeenIds(prev => new Set(prev).add(id));
+        }
+      })
+      .catch(() => {
+        setSeenIds(prev => new Set(prev).add(id));
+      });
+  }
+
+  /* ── Called by BirdModal footer button ── */
+  function toggleSeen(id: number, city?: string, date?: string): void {
+    if (seenIds.has(id)) {
+      unsaveBird(id);
+    } else {
+      saveBird(id, city, date);
     }
   }
 
@@ -339,7 +348,9 @@ export default function Floridex() {
       />
 
       <div id="grid">
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="no-results">Loading your Floridex…</div>
+        ) : filtered.length === 0 ? (
           <div className="no-results">No birds match your search.</div>
         ) : (
           filtered.map(bird => (
