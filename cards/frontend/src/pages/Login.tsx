@@ -99,6 +99,7 @@ function Login(): JSX.Element {
       const data = await response.json();
 
       if (response.ok) {
+        localStorage.setItem('pendingVerificationIdentifier', email);
         showPanel('success', 'Success', `Please check your email for verification.`);
         // then navigate to another page, e.g.:
         // navigate('/home');

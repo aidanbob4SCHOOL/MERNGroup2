@@ -82,3 +82,21 @@
 
 .verify-btn:hover { background: #3a7a5e; }
 .verify-btn:active { transform: scale(0.98); }
+
+.verify-resend-success {
+    font-size: 13px;
+    color: #27500A;
+    background: #EAF3DE;
+    border-radius: 8px;
+    padding: 8px 12px;
+    text-align: center;
+}
+
+.verify-resend-error {
+    font-size: 13px;
+    color: #A32D2D;
+    background: #FCEBEB;
+    border-radius: 8px;
+    padding: 8px 12px;
+    text-align: center;
+}

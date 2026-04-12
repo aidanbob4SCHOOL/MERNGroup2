@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './VerifyEmail.css';
@@ -11,6 +11,7 @@ function VerifyEmail(): JSX.Element {
     const token = searchParams.get('token') ?? '';
     const [status, setStatus] = useState<Status>('loading');
     const [message, setMessage] = useState<string>('');
+    const [resendState, setResendState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -44,6 +45,37 @@ function VerifyEmail(): JSX.Element {
         verify();
     }, [token, navigate]);
 
+    async function handleResend(): Promise<void> {
+        const identifier = localStorage.getItem('pendingVerificationIdentifier') ?? '';
+
+        if (!identifier) {
+            setResendState('error');
+            return;
+        }
+
+        setResendState('sending');
+
+        try {
+            const response = await fetch('/api/resend-verification', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ identifier }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.removeItem('pendingVerificationIdentifier');
+                setResendState('sent');
+            } else {
+                setResendState('error');
+                setMessage(data.error ?? 'Failed to resend email.');
+            }
+        } catch (err) {
+            setResendState('error');
+        }
+    }
+
     return (
         <div className="page">
             <Header />
@@ -74,9 +106,28 @@ function VerifyEmail(): JSX.Element {
                             <div className="verify-icon error">!</div>
                             <h2 className="verify-title">Verification Failed</h2>
                             <p className="verify-description">{message}</p>
-                            <button className="verify-btn" onClick={() => navigate('/login')}>
-                                Back to Login
-                            </button>
+
+                            {resendState === 'sent' ? (
+                                <p className="verify-resend-success">
+                                    A new verification email has been sent. Please check your inbox.
+                                </p>
+                            ) : (
+                                <button
+                                    className="verify-btn"
+                                    onClick={handleResend}
+                                    disabled={resendState === 'sending'}
+                                >
+                                    {resendState === 'sending' ? 'Sending...' : 'Resend Verification Email'}
+                                </button>
+                            )}
+
+                            {resendState === 'error' && (
+                                <p className="verify-resend-error">
+                                    Could not resend email. Please go back to login and try again.
+                                </p>
+                            )}
+
+                            <Link to="/login" className="back-link">Back to Login</Link>
                         </>
                     )}
 
