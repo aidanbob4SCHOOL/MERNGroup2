@@ -4,8 +4,8 @@ export function useAuth() {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        setIsLoggedIn(!!token);
+        const id = localStorage.getItem('userID');
+        setIsLoggedIn(!!id);
     }, []);
 
     return { isLoggedIn };

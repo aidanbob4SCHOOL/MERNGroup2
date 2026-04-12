@@ -20,31 +20,29 @@ function VerifyEmail(): JSX.Element {
             return;
         }
 
-        /*
-          Replace with your real API call:
-          async function verify() {
+
+        async function verify() {
             try {
-              const response = await fetch('https://springucfpoosdap.com/api/verify-email', {
+              const response = await fetch('/api/verify-email', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token }),
               });
               const data = await response.json();
               if (response.ok) {
-                localStorage.setItem('token', data.token);
+                localStorage.setItem('userID', data.id);
                 setStatus('success');
                 setTimeout(() => navigate('/floridex'), 3000);
               } else {
                 setStatus('error');
-                setMessage(data.message ?? 'Verification failed. Your link may have expired.');
+                setMessage(data.error ?? 'Verification failed. Your link may have expired.');
               }
             } catch (err) {
               setStatus('error');
               setMessage('Network error. Please try again.');
             }
-          }
-          verify();
-        */
+        }
+        verify();
     }, [token, navigate]);
 
     return (

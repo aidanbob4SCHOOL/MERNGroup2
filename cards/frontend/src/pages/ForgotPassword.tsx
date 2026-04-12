@@ -31,13 +31,24 @@ function ForgotPassword(): JSX.Element {
             return;
         }
 
-        /*
-          fetch('http://localhost:5000/api/auth/forgot-password', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ identifier }),
-          });
-        */
+        try {
+            const response = await fetch('/api/request-password-reset', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({identifier}),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                showPanel('success', 'Success', 'Password Reset requested, please check your Email.');
+            } else {
+                showPanel('error', 'Error', data.error ?? 'Something went wrong, please try again.');
+            }
+        }catch(err) {
+            showPanel('error', 'Error', 'Network error. Please try again.');
+            return;
+        }
+
     }
 
     return (

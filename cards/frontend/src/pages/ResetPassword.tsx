@@ -51,9 +51,8 @@ function ResetPassword(): JSX.Element {
             return;
         }
 
-        /*
-          try {
-            const response = await fetch('https://springucfpoosdap.com/api/reset-password', {
+        try {
+            const response = await fetch('/api/reset-password', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ token, password }),
@@ -62,12 +61,11 @@ function ResetPassword(): JSX.Element {
             if (response.ok) {
               setSubmitted(true);
             } else {
-              showPanel('error', 'Error', data.message ?? 'Reset failed. Your link may have expired.');
+              showPanel('error', 'Error', data.error ?? 'Reset failed. Your link may have expired.');
             }
-          } catch (err) {
+        } catch (err) {
             showPanel('warning', 'Warning', 'Network error. Please try again.');
-          }
-        */
+        }
     }
 
     const EyeOpen = () => (

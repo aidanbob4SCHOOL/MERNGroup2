@@ -20,11 +20,10 @@ function EyeOpen(): JSX.Element {
 function EyeClosed(): JSX.Element {
   return (
     <>
-      <line x1="17.94" y1="17.94" x2="23" y2="23"/>
-      <line x1="1" y1="1" x2="6.06" y2="6.06"/>
+      <line x1="1" y1="1" x2="23" y2="23"/>
       <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
       <path d="M6.53 6.53A13.5 13.5 0 0 0 1 12s4 8 11 8a9.12 9.12 0 0 0 4.76-1.34"/>
-      <line x1="9" y1="9" x2="15" y2="15"/>
+      <path d="M14 14.2362C13.4692 14.7112 12.7684 15.0001 12 15.0001C10.3431 15.0001 9 13.657 9 12.0001C9 11.1764 9.33193 10.4303 9.86932 9.88818"/>
     </>
   );
 }
@@ -76,10 +75,10 @@ function Login(): JSX.Element {
 
   async function doSignup(): Promise<void> {
     const email = emailRef.current?.value.trim() ?? '';
-    const identifier = usernameRef.current?.value.trim() ?? '';
+    const username = usernameRef.current?.value.trim() ?? '';
     const password = passwordRef.current?.value.trim() ?? '';
 
-    if (!email || !identifier || !password) {
+    if (!email || !username || !password) {
       showPanel('error', 'Error', 'Please fill in all fields.');
       return;
     }
@@ -87,20 +86,20 @@ function Login(): JSX.Element {
     hidePanel()
 
     try {
-      const response = await fetch('http://API path', {
+      const response = await fetch('/api/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, identifier, password }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        showPanel('success', 'Success', `Please check your email for verification, then log in.`);
+        showPanel('success', 'Success', `Please check your email for verification.`);
         // then navigate to another page, e.g.:
         // navigate('/home');
       } else {
-        showPanel('error', 'Error', data.message ?? 'Something went wrong, please try again.');
+        showPanel('error', 'Error', data.error ?? 'Something went wrong, please try again.');
       }
     } catch (err) {
       showPanel('warning', 'Warning', 'Network error. Please try again.');
@@ -119,7 +118,7 @@ function Login(): JSX.Element {
     hidePanel()
 
     try {
-      const response = await fetch('http://API path', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identifier, password }),
@@ -128,13 +127,13 @@ function Login(): JSX.Element {
       const data = await response.json();
 
       if (response.ok) {
-        showPanel('success', 'Success', `Welcome back, ${data.name}!`);
+        showPanel('success', 'Success', `Welcome!`);
         // save the token so you stay logged in
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('userID', data.id);
         // then navigate to another page, e.g.:
-        // navigate('/home');
+        navigate('/floridex');
       } else {
-        showPanel('error', 'Error', data.message ?? 'Wrong username or password.');
+        showPanel('error', 'Error', data.error ?? 'Wrong username or password.');
       }
     } catch (err) {
       showPanel('warning', 'Warning', 'Network error. Please try again.');

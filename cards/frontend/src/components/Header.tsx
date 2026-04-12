@@ -17,7 +17,7 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
     const totalCount = 151;
 
     function handleLogout(): void {
-        localStorage.removeItem('token');
+        localStorage.removeItem('userID');
         navigate('/login');
     }
 
