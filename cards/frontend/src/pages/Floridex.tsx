@@ -4,7 +4,7 @@ import SearchBar from '../components/SearchBar';
 import BirdCard from '../components/BirdCard';
 import BirdModal from '../components/BirdModal';
 import Footer from '../components/Footer';
-import './Home.css';
+import './Floridex.css';
 
 /* ── Types ── */
 interface Bird {
@@ -47,9 +47,9 @@ function loadSightings(): Record<number, Sighting> {
 }
 
 /* ══════════════════════════════════════════════
-   Home page
+   Floridex page
    ══════════════════════════════════════════════ */
-export default function Home() {
+export default function Floridex() {
   /* ── Remote bird data ── */
   const [birds, setBirds] = useState<Bird[]>([]);
 
@@ -134,11 +134,7 @@ export default function Home() {
   return (
     <div className="home-page">
       {/* Sticky header: logo + title + progress + logout + Log Bird */}
-      <Header
-        seenCount={seenCount}
-        total={birds.length}
-        seenBirds={seenBirds}
-      />
+      <Header/>
 
       {/* Controls strip: search + family filter + seen filter + sort */}
       <SearchBar

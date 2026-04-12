@@ -35,7 +35,7 @@ function Login(): JSX.Element {
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/floridex');
+      navigate('/floridex', { replace: true });
     }
   }, [isLoggedIn, navigate]);
 
