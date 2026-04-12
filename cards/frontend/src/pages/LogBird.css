@@ -38,6 +38,7 @@
   max-width: 40vw;
   border: 2px solid #d5dfd8;
   display: block;
+  object-fit: contain;
 }
 
 .greyed {
@@ -126,4 +127,3 @@
     font-size: 24px;
   }
 }
-

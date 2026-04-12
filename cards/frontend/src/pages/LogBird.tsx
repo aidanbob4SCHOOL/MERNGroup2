@@ -72,14 +72,35 @@ function LogBird(): JSX.Element {
     }
   }
 
-  function handleLogBird(): void {
+  async function handleLogBird(): Promise<void> {
     if (!identifiedBird) {
       return;
     }
 
-    // Placeholder for the future logging API call.
-    // eslint-disable-next-line no-console
-    console.info('TODO: log identified bird', identifiedBird);
+    const userId = localStorage.getItem('userID');
+    if (!userId) {
+      setUploadError('User not logged in.');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/save-bird', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, birdId: identifiedBird.index }),
+      });
+
+      const data = await response.json();
+      if (data.error) {
+        setUploadError(data.error);
+      } else {
+        // Success, perhaps show message or reset
+        setUploadError('');
+        resetFlow();
+      }
+    } catch (error) {
+      setUploadError('Failed to log bird.');
+    }
   }
 
   const identifiedImageSrc = identifiedBird

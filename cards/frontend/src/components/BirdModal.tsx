@@ -22,7 +22,8 @@ interface BirdModalProps {
   isSeen: boolean;
   sighting?: Sighting;
   onClose: () => void;
-  onToggleSeen: (id: number, city?: string, date?: string) => void;
+  onToggleSeen: (id: number) => void;
+  onUpdateSighting: (id: number, city?: string, date?: string) => void;
 }
 
 export default function BirdModal({
@@ -31,6 +32,7 @@ export default function BirdModal({
   sighting,
   onClose,
   onToggleSeen,
+  onUpdateSighting,
 }: BirdModalProps) {
   const [foundCity, setFoundCity] = useState('');
   const [foundDate, setFoundDate] = useState('');
@@ -54,13 +56,49 @@ export default function BirdModal({
 
   if (!bird) return null;
 
-  function handleToggle() {
-    if (!isSeen) {
-      // Pass city + date to parent, which sends them to /api/save-bird
-      onToggleSeen(bird!.id, foundCity.trim() || undefined, foundDate.trim() || undefined);
-    } else {
-      // Unsaving — no metadata needed
+  async function handleToggle() {
+    const userId = localStorage.getItem('userID');
+    if (!userId) {
+      alert('User not logged in.');
+      return;
+    }
+
+    try {
+      if (!isSeen) {
+        // Saving — send city + date to /api/save-bird
+        const response = await fetch('/api/save-bird', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId,
+            birdId: bird!.id,
+            foundCity: foundCity.trim() || undefined,
+            foundDate: foundDate.trim() || undefined,
+          }),
+        });
+        const data = await response.json();
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+      } else {
+        // Unsaving — call /api/delete-saved-bird
+        const response = await fetch('/api/delete-saved-bird', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, birdId: bird!.id }),
+        });
+        const data = await response.json();
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+      }
+      // Success, update parent
       onToggleSeen(bird!.id);
+      onUpdateSighting(bird!.id, foundCity.trim() || undefined, foundDate.trim() || undefined);
+    } catch (error) {
+      alert('Failed to update bird status.');
     }
   }
 

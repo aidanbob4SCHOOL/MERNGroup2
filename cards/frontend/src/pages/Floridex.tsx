@@ -235,69 +235,32 @@ export default function Floridex() {
       .finally(() => setLoading(false));
   }, []);
 
-  /* ── Mark seen: POST /api/save-bird with foundCity + foundDate ── */
-  function saveBird(id: number, city?: string, date?: string): void {
-    const userId = localStorage.getItem('userID');
-    if (!userId) return;
-
-    // Optimistic UI
+  /* ── Mark seen: update local state ── */
+  function saveBird(id: number): void {
     setSeenIds(prev => new Set(prev).add(id));
-    if (city || date) {
-      setSightings(prev => ({
-        ...prev,
-        [id]: { city: city ?? prev[id]?.city, date: date ?? prev[id]?.date },
-      }));
-    }
-
-    fetch('/api/save-bird', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, birdId: id, foundCity: city, foundDate: date }),
-    })
-      .then(r => r.json())
-      .then(data => {
-        if (data.error) {
-          // Revert on failure
-          setSeenIds(prev => { const next = new Set(prev); next.delete(id); return next; });
-        }
-      })
-      .catch(() => {
-        setSeenIds(prev => { const next = new Set(prev); next.delete(id); return next; });
-      });
   }
 
-  /* ── Mark unseen: POST /api/unsave-bird ── */
+  /* ── Mark unseen: update local state ── */
   function unsaveBird(id: number): void {
-    const userId = localStorage.getItem('userID');
-    if (!userId) return;
-
-    // Optimistic UI
     setSeenIds(prev => { const next = new Set(prev); next.delete(id); return next; });
-
-    fetch('/api/unsave-bird', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, birdId: id }),
-    })
-      .then(r => r.json())
-      .then(data => {
-        if (data.error) {
-          // Revert on failure
-          setSeenIds(prev => new Set(prev).add(id));
-        }
-      })
-      .catch(() => {
-        setSeenIds(prev => new Set(prev).add(id));
-      });
+    setSightings(prev => { const next = { ...prev }; delete next[id]; return next; });
   }
 
   /* ── Called by BirdModal footer button ── */
-  function toggleSeen(id: number, city?: string, date?: string): void {
+  function toggleSeen(id: number): void {
     if (seenIds.has(id)) {
       unsaveBird(id);
     } else {
-      saveBird(id, city, date);
+      saveBird(id);
     }
+  }
+
+  /* ── Update sighting data ── */
+  function updateSighting(id: number, city?: string, date?: string): void {
+    setSightings(prev => ({
+      ...prev,
+      [id]: { city, date },
+    }));
   }
 
   /* families derived from static BIRDS — computed once */
@@ -372,6 +335,7 @@ export default function Floridex() {
         sighting={selectedBird ? sightings[selectedBird.id] : undefined}
         onClose={() => setSelectedBird(null)}
         onToggleSeen={toggleSeen}
+        onUpdateSighting={updateSighting}
       />
     </div>
   );
