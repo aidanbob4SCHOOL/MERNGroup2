@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
+import imageCompression from 'browser-image-compression';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './LogBird.css';
@@ -17,9 +18,14 @@ interface IdentifyBirdResponse {
   aiConfidenceScore: number;
 }
 
+const SERVER_MAX_UPLOAD_BYTES = 1024 * 1024;
+const COMPRESS_THRESHOLD_BYTES = SERVER_MAX_UPLOAD_BYTES;
+const MAX_INPUT_BYTES = 30 * 1024 * 1024;
+
 function LogBird(): JSX.Element {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isPreparingUpload, setIsPreparingUpload] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [identifiedBird, setIdentifiedBird] = useState<IdentifyBirdResponse | null>(null);
   const [foundDate, setFoundDate] = useState('');
@@ -39,9 +45,33 @@ function LogBird(): JSX.Element {
     }
   }
 
+  async function compressImageForUpload(file: File): Promise<File> {
+    const compressedBlob = await imageCompression(file, {
+      maxSizeMB: 0.95,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+      initialQuality: 0.82,
+    });
+
+    return new File([compressedBlob], file.name, {
+      type: compressedBlob.type || file.type,
+      lastModified: Date.now(),
+    });
+  }
+
   async function handleFileSelected(event: ChangeEvent<HTMLInputElement>): Promise<void> {
     const file = event.target.files?.[0];
     if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please upload a valid image file.');
+      return;
+    }
+
+    if (file.size > MAX_INPUT_BYTES) {
+      setUploadError('Image is too large. Please use an image under 30MB before upload.');
       return;
     }
 
@@ -49,8 +79,25 @@ function LogBird(): JSX.Element {
     setUploadError('');
 
     try {
+      let uploadFile = file;
+
+      if (file.size >= COMPRESS_THRESHOLD_BYTES) {
+        setIsPreparingUpload(true);
+        try {
+          uploadFile = await compressImageForUpload(file);
+        } finally {
+          setIsPreparingUpload(false);
+        }
+      }
+
+      if (uploadFile.size > SERVER_MAX_UPLOAD_BYTES) {
+        setUploadError('Image is still too large for the server limit (1MB). Please crop or resize and try again.');
+        setIdentifiedBird(null);
+        return;
+      }
+
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append('image', uploadFile, uploadFile.name);
 
       const response = await fetch('/api/identify-birds', {
         method: 'POST',
@@ -72,6 +119,7 @@ function LogBird(): JSX.Element {
       setUploadError(message);
       setIdentifiedBird(null);
     } finally {
+      setIsPreparingUpload(false);
       setIsUploading(false);
     }
   }
@@ -202,7 +250,7 @@ function LogBird(): JSX.Element {
               onClick={openUploadPicker}
               disabled={isUploading}
             >
-              {isUploading ? 'Identifying...' : 'Upload'}
+              {isPreparingUpload ? 'Preparing...' : (isUploading ? 'Identifying...' : 'Upload')}
             </button>
 
             {uploadError && <p className="upload-error">{uploadError}</p>}

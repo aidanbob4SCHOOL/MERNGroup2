@@ -14,7 +14,7 @@ function Landing(): JSX.Element {
         {isLoggedIn ? (
             <Header/>
         ) : (
-            <Header rightContent={<Link to="/login">Login</Link>} />
+            <Header rightContent={<Link to="/login" aria-label="Log in to Floridex">Login</Link>} />
         )}
       <main className="landing-main">
         <div className="landing-text">
@@ -27,9 +27,13 @@ function Landing(): JSX.Element {
           </p>
 
             {isLoggedIn ? (
-                <Link to="/floridex" className="get-started-btn">To the Floridex</Link>
+                <Link to="/floridex" className="get-started-btn" aria-label="Go to Floridex">
+                  To the Floridex
+                </Link>
             ) : (
-                <Link to="/login" className="get-started-btn">Get Started</Link>
+                <Link to="/login" className="get-started-btn" aria-label="Get started with Floridex">
+                  Get Started
+                </Link>
             )}
         </div>
 
