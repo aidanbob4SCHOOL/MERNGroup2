@@ -41,14 +41,21 @@ function Slideshow(): JSX.Element {
         ))}
       </div>
 
-      <div className="slide-dots">
-        {slides.map((_: Slide, i: number) => (
-          <button
-            key={i}
-            className={`dot ${i === current ? 'active' : ''}`}
-            onClick={() => goToSlide(i)}
-          />
-        ))}
+      <div className="slide-dots" aria-label="Choose a slideshow image">
+        {slides.map((slide: Slide, i: number) => {
+          const isActive = i === current;
+          return (
+            <button
+              key={i}
+              type="button"
+              className={`dot ${isActive ? 'active' : ''}`}
+              onClick={() => goToSlide(i)}
+              aria-label={`Show slide ${i + 1}: ${slide.name}`}
+              aria-pressed={isActive}
+              aria-current={isActive ? 'true' : undefined}
+            />
+          );
+        })}
       </div>
     </div>
   );

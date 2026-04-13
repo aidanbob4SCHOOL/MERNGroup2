@@ -6,10 +6,13 @@
 
 .landing-main {
   flex: 1;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(420px, 1.15fr) minmax(420px, 0.95fr);
   align-items: center;
-  padding: 60px 80px;
-  gap: 60px;
+  gap: clamp(36px, 5vw, 72px);
+  width: min(1280px, 100%);
+  margin: 0 auto;
+  padding: 60px clamp(24px, 5vw, 80px);
 }
 
 .landing-text {
@@ -17,6 +20,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  max-width: 720px;
 }
 
 .welcome-title {
@@ -29,10 +33,10 @@
 
 .landing-description {
   font-family: system-ui, sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   color: #3a5a4a;
-  line-height: 1.7;
-  max-width: 340px;
+  line-height: 1.75;
+  max-width: 620px;
 }
 
 .get-started-btn {
@@ -52,7 +56,18 @@
 .get-started-btn:hover { background: #3a7a5e; }
 .get-started-btn:active { transform: scale(0.98); }
 
+@media (max-width: 900px) {
+  .landing-main {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .landing-text {
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 700px) {
-  .landing-main { flex-direction: column; padding: 40px 24px; }
+  .landing-main { padding: 40px 24px; }
   .welcome-title { font-size: 64px; }
 }
