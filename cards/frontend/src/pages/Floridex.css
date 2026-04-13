@@ -7,7 +7,6 @@
 
 /* Page wrapper — full-height flex column */
 .home-page {
-  background: #F5FFF3;
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
   display: flex;

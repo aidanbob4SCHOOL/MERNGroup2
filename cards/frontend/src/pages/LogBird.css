@@ -1,6 +1,5 @@
 .log-bird-page {
   min-height: 100vh;
-  background: #f5fff3;
   display: flex;
   flex-direction: column;
 }

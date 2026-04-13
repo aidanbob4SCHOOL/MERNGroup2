@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
 import imageCompression from 'browser-image-compression';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './LogBird.css';
@@ -24,6 +25,7 @@ const MAX_INPUT_BYTES = 30 * 1024 * 1024;
 
 function LogBird(): JSX.Element {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState(false);
   const [isPreparingUpload, setIsPreparingUpload] = useState(false);
   const [uploadError, setUploadError] = useState('');
@@ -153,7 +155,9 @@ function LogBird(): JSX.Element {
       } else {
         // Success, perhaps show message or reset
         setUploadError('');
+
         resetFlow();
+        navigate('/floridex');
       }
     } catch (error) {
       setUploadError('Failed to log bird.');
@@ -211,6 +215,11 @@ function LogBird(): JSX.Element {
 
             <p className="identified-text">
               BIRDBRAIN identified this as a {identifiedBird.name}
+            </p>
+
+            <p className="identified-note">
+              If this looks incorrect, you can manually log a bird from the{' '}
+              <Link to="/floridex">main Floridex page</Link>.
             </p>
 
             {uploadError && <p className="upload-error">{uploadError}</p>}
