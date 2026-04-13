@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React, { ReactNode, useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import BirdLogo from './BirdLogo';
 import { useAuth } from '../hooks/useAuth';
 import './Header.css';
@@ -12,11 +12,57 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
     const { isLoggedIn } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    const isLogBirdPage = location.pathname === '/log-bird';
+    const [seenBirds, setSeenBirds] = useState<any[]>([]);
+    const [error, setError] = useState(false);
 
-    // replace seen with data from api
-    const seenCount  = 0;
+    // Fetch seen birds from API
+    const fetchSeenBirds = React.useCallback(async () => {
+        if (!isLoggedIn) return;
+        const userId = localStorage.getItem('userID');
+        if (!userId) return;
+
+        try {
+            const res = await fetch('/api/get-saved-birds', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId }),
+            });
+            const data = await res.json();
+            if (data.error) {
+                console.warn('API error:', data.error);
+                setError(true);
+                return;
+            }
+            setSeenBirds(data.identfiedBirds || []);
+            setError(false);
+        } catch (err: any) {
+            console.error('Failed to fetch seen birds:', err);
+            setError(true);
+        }
+    }, [isLoggedIn]);
+
+    // Fetch on mount
+    useEffect(() => {
+        fetchSeenBirds();
+    }, [fetchSeenBirds]);
+
+    // Poll for updates every 2 seconds when on Floridex page
+    useEffect(() => {
+        if (!isLoggedIn || location.pathname !== '/floridex') return;
+
+        const interval = setInterval(() => {
+            fetchSeenBirds();
+        }, 2000); // Update every 2 seconds
+
+        return () => clearInterval(interval);
+    }, [isLoggedIn, location.pathname, fetchSeenBirds]);
+
+    const seenCount = seenBirds.length;
     const totalCount = 151;
+
+    // Progress bar width in px
+    const progressBarWidth = 200; // You can adjust this for a larger bar
+    const progressPercent = Math.min(seenCount / totalCount, 1);
 
     function handleLogout(): void {
         localStorage.removeItem('userID');
@@ -44,10 +90,21 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
                         <div className="header-progress-label">
                             <span className="header-seen-count">{seenCount}</span>/{totalCount}
                         </div>
-                        <div className="header-progress-bar">
+                        <div className="header-progress-bar" style={{ width: `${progressBarWidth}px`, position: 'relative', height: '16px', background: '#eee', borderRadius: '8px', overflow: 'hidden', margin: '0 auto' }}>
+                            {/* Background bar always visible */}
                             <div
                                 className="header-progress-fill"
-                                style={{ width: `${(seenCount / totalCount) * 100}%` }}
+                                style={{
+                                    width: `${progressPercent * 100}%`,
+                                    height: '100%',
+                                    background: '#4a8c7c', // Single color
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 0,
+                                    zIndex: 2,
+                                    borderRadius: '8px',
+                                    transition: 'width 0.3s',
+                                }}
                             />
                         </div>
                     </>
@@ -56,9 +113,15 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
 
             <div className="header-right">
                 {isLoggedIn ? (
-                    <Link to={isLogBirdPage ? '/floridex' : '/log-bird'} className="log-bird-btn">
-                        {isLogBirdPage ? 'Back to Floridex' : 'Log Bird'}
-                    </Link>
+                    location.pathname === '/log-bird' ? (
+                        <Link to="/floridex" className="log-bird-btn">
+                            Back to Floridex
+                        </Link>
+                    ) : (
+                        <Link to="/log-bird" className="log-bird-btn">
+                            Log Bird
+                        </Link>
+                    )
                 ) : (
                     rightContent
                 )}
@@ -68,3 +131,4 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
 }
 
 export default Header;
+
