@@ -7,7 +7,7 @@
 .icon {
   width: 160px;
   height: 170px;
-  background: #F5FFF3;       /* default; overridden by .seen / .not-seen */
+  background: #F5FFF3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,6 +18,8 @@
   align-self: start;
   font-family: 'Inter', sans-serif;
   box-sizing: border-box;
+  border: 2px solid #000;   /* ← ADDED */
+  border-radius: 12px;      /* ← ADDED */
 }
 .icon:hover {
   filter: brightness(1.05);
@@ -84,4 +86,9 @@
   word-break: break-word;
   overflow-wrap: break-word;
   flex-shrink: 1;
+}
+
+.bird-card img {
+  border: none !important;
+  box-shadow: none !important;
 }

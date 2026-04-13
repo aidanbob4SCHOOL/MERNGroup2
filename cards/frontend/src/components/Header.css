@@ -71,18 +71,28 @@
 }
 
 .header-progress-bar {
-  width: 200px;
-  height: 10px;
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 6px;
+  width: 300px; /* Make the bar larger */
+  height: 18px;
+  background: #e0e0e0; /* Light gray for unfilled */
+  border-radius: 9px;
   overflow: hidden;
+  position: relative;
+  margin-top: 6px;
+}
+
+.header-progress-fill-inner {
+  height: 100%;
+  background: #4a8c7c; /* Main fill color */
+  border-radius: 9px 0 0 9px;
+  transition: width 0.3s;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
 }
 
 .header-progress-fill {
-  height: 100%;
-  background: #fff;
-  border-radius: 6px;
-  transition: width 0.4s ease;
+  display: none; /* Remove the double fill, only use .header-progress-fill-inner */
 }
 
 .header-right {
