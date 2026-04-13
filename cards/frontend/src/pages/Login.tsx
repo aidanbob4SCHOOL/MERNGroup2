@@ -188,6 +188,8 @@ function Login(): JSX.Element {
                     type="button"
                     className="toggle-password-btn"
                     onClick={() => setShowPassword((prev: boolean) => !prev)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPassword}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -199,6 +201,8 @@ function Login(): JSX.Element {
                       strokeWidth={2}
                       strokeLinecap="round"
                       strokeLinejoin="round"
+                      aria-hidden="true"
+                      focusable="false"
                     >
                       {showPassword ? <EyeClosed /> : <EyeOpen />}
                     </svg>

@@ -85,8 +85,22 @@ function ResetPassword(): JSX.Element {
         </>
     );
 
-    const EyeToggle = ({ show, onClick }: { show: boolean; onClick: () => void }) => (
-        <button type="button" className="reset-eye-btn" onClick={onClick}>
+    const EyeToggle = ({
+        show,
+        onClick,
+        fieldLabel,
+    }: {
+        show: boolean;
+        onClick: () => void;
+        fieldLabel: string;
+    }) => (
+        <button
+            type="button"
+            className="reset-eye-btn"
+            onClick={onClick}
+            aria-label={show ? `Hide ${fieldLabel}` : `Show ${fieldLabel}`}
+            aria-pressed={show}
+        >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24px" height="24px"
@@ -96,6 +110,8 @@ function ResetPassword(): JSX.Element {
                 strokeWidth={2}
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                aria-hidden="true"
+                focusable="false"
             >
                 {show ? <EyeClosed /> : <EyeOpen />}
             </svg>
@@ -136,7 +152,11 @@ function ResetPassword(): JSX.Element {
                                     autoComplete="new-password"
                                     className="reset-input"
                                 />
-                                <EyeToggle show={showPassword} onClick={() => setShowPassword((p) => !p)} />
+                                <EyeToggle
+                                    show={showPassword}
+                                    fieldLabel="new password"
+                                    onClick={() => setShowPassword((p) => !p)}
+                                />
                             </div>
 
                             <div className="reset-input-wrap">
@@ -147,7 +167,11 @@ function ResetPassword(): JSX.Element {
                                     autoComplete="new-password"
                                     className="reset-input"
                                 />
-                                <EyeToggle show={showConfirm} onClick={() => setShowConfirm((p) => !p)} />
+                                <EyeToggle
+                                    show={showConfirm}
+                                    fieldLabel="confirm new password"
+                                    onClick={() => setShowConfirm((p) => !p)}
+                                />
                             </div>
 
                             <button className="reset-btn" onClick={handleSubmit} disabled={!token}>
