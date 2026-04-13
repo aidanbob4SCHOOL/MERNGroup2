@@ -13,7 +13,7 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
     const navigate = useNavigate();
     const location = useLocation();
     const [seenBirds, setSeenBirds] = useState<any[]>([]);
-    const [error, setError] = useState(false);
+    const [, setError] = useState(false);
 
     // Fetch seen birds from API
     const fetchSeenBirds = React.useCallback(async () => {
@@ -71,13 +71,13 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
 
     return (
         <header className="site-header">
-            <Link to="/landing" className="header-logo">
+            <Link to="/landing" className="header-logo" aria-label="Go to the Floridex landing page">
                 <BirdLogo />
             </Link>
 
             <div className="header-center">
                 {isLoggedIn ? (
-                    <Link to="/floridex" className="header-title-link">
+                    <Link to="/floridex" className="header-title-link" aria-label="Go to Floridex bird checklist">
                         <h1 className="header-title">Floridex</h1>
                     </Link>
                 ) : (
@@ -86,7 +86,7 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
 
                 {isLoggedIn && (
                     <>
-                        <button className="logout-btn" onClick={handleLogout}>Logout</button>
+                        <button className="logout-btn" onClick={handleLogout} aria-label="Log out of Floridex">Logout</button>
                         <div className="header-progress-label">
                             <span className="header-seen-count">{seenCount}</span>/{totalCount}
                         </div>
@@ -114,11 +114,11 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
             <div className="header-right">
                 {isLoggedIn ? (
                     location.pathname === '/log-bird' ? (
-                        <Link to="/floridex" className="log-bird-btn">
+                        <Link to="/floridex" className="log-bird-btn" aria-label="Return to Floridex bird checklist">
                             Back to Floridex
                         </Link>
                     ) : (
-                        <Link to="/log-bird" className="log-bird-btn">
+                        <Link to="/log-bird" className="log-bird-btn" aria-label="Open the Log Bird page">
                             Log Bird
                         </Link>
                     )
