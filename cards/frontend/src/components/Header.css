@@ -37,6 +37,15 @@
   line-height: 1.1;
 }
 
+.header-title-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.header-title-link:hover .header-title {
+  text-decoration: underline;
+}
+
 .logout-btn {
   background: none;
   border: none;

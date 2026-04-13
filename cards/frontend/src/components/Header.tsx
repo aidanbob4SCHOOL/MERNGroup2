@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import BirdLogo from './BirdLogo';
 import { useAuth } from '../hooks/useAuth';
 import './Header.css';
@@ -11,6 +11,8 @@ interface HeaderProps {
 function Header({ rightContent }: HeaderProps): JSX.Element {
     const { isLoggedIn } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    const isLogBirdPage = location.pathname === '/log-bird';
 
     // replace seen with data from api
     const seenCount  = 0;
@@ -28,7 +30,13 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
             </Link>
 
             <div className="header-center">
-                <h1 className="header-title">Floridex</h1>
+                {isLoggedIn ? (
+                    <Link to="/floridex" className="header-title-link">
+                        <h1 className="header-title">Floridex</h1>
+                    </Link>
+                ) : (
+                    <h1 className="header-title">Floridex</h1>
+                )}
 
                 {isLoggedIn && (
                     <>
@@ -48,8 +56,8 @@ function Header({ rightContent }: HeaderProps): JSX.Element {
 
             <div className="header-right">
                 {isLoggedIn ? (
-                    <Link to="/log-bird" className="log-bird-btn">
-                        Log Bird
+                    <Link to={isLogBirdPage ? '/floridex' : '/log-bird'} className="log-bird-btn">
+                        {isLogBirdPage ? 'Back to Floridex' : 'Log Bird'}
                     </Link>
                 ) : (
                     rightContent

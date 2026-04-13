@@ -22,6 +22,8 @@ function LogBird(): JSX.Element {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [identifiedBird, setIdentifiedBird] = useState<IdentifyBirdResponse | null>(null);
+  const [foundDate, setFoundDate] = useState('');
+  const [foundCity, setFoundCity] = useState('');
 
   function openUploadPicker(): void {
     fileInputRef.current?.click();
@@ -30,6 +32,8 @@ function LogBird(): JSX.Element {
   function resetFlow(): void {
     setIdentifiedBird(null);
     setUploadError('');
+    setFoundDate('');
+    setFoundCity('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -87,7 +91,12 @@ function LogBird(): JSX.Element {
       const response = await fetch('/api/save-bird', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, birdId: identifiedBird.index }),
+        body: JSON.stringify({
+          userId,
+          birdId: identifiedBird.index,
+          foundDate: foundDate.trim() || undefined,
+          foundCity: foundCity.trim() || undefined,
+        }),
       });
 
       const data = await response.json();
@@ -120,6 +129,29 @@ function LogBird(): JSX.Element {
               alt={identifiedBird.name}
             />
 
+            <div className="identified-sighting-fields">
+              <label className="identified-field-row">
+                <span className="identified-field-label">Date Found:</span>
+                <input
+                  className="identified-field-input"
+                  type="date"
+                  value={foundDate}
+                  onChange={(e) => setFoundDate(e.target.value)}
+                />
+              </label>
+
+              <label className="identified-field-row">
+                <span className="identified-field-label">City Found:</span>
+                <input
+                  className="identified-field-input"
+                  type="text"
+                  placeholder="e.g. Orlando"
+                  value={foundCity}
+                  onChange={(e) => setFoundCity(e.target.value)}
+                />
+              </label>
+            </div>
+
             <div className="identified-actions">
               <button type="button" className="action-btn log-btn" onClick={handleLogBird}>
                 Log
@@ -132,6 +164,8 @@ function LogBird(): JSX.Element {
             <p className="identified-text">
               BIRDBRAIN identified this as a {identifiedBird.name}
             </p>
+
+            {uploadError && <p className="upload-error">{uploadError}</p>}
           </section>
         ) : (
           <section className="default-state" aria-live="polite">

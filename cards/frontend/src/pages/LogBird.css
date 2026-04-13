@@ -100,6 +100,36 @@
   display: none;
 }
 
+.identified-sighting-fields {
+  width: min(420px, 92vw);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.identified-field-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.identified-field-label {
+  min-width: 92px;
+  color: #2f5f4a;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.identified-field-input {
+  flex: 1;
+  border: 1px solid #b8c8bf;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 14px;
+  background: #fff;
+}
+
 @media (max-width: 900px) {
   .compare-row {
     flex-direction: column;
@@ -125,5 +155,15 @@
   .upload-btn,
   .action-btn {
     font-size: 24px;
+  }
+
+  .identified-field-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .identified-field-label {
+    min-width: 0;
   }
 }
